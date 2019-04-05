@@ -92,6 +92,6 @@ class Scope implements ScopeInterface {
      * An array of reserved scopes.
      */
     public function getReservedScopes() {
-        return array('openid', 'offline_access');
+        return ['openid', 'offline_access'];
     }
 }

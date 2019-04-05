@@ -16,7 +16,7 @@
         "psr-0": { "nAuth": "src/" }
     },
     "require":{
-        "php":">=5.3.9"
+        "php":">=5.4.9"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.0",

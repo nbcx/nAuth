@@ -7,8 +7,8 @@ namespace nAuth\storage;
  *
  * @author Brent Shaffer <bshafs at gmail dot com>
  */
-interface AccessTokenInterface
-{
+interface AccessTokenInterface {
+
     /**
      * Look up the supplied oauth_token from storage.
      *
@@ -38,8 +38,8 @@ interface AccessTokenInterface
      * @param $oauth_token    oauth_token to be stored.
      * @param $client_id      client identifier to be stored.
      * @param $user_id        user identifier to be stored.
-     * @param int    $expires expiration to be stored as a Unix timestamp.
-     * @param string $scope   OPTIONAL Scopes to be stored in space-separated string.
+     * @param int $expires expiration to be stored as a Unix timestamp.
+     * @param string $scope OPTIONAL Scopes to be stored in space-separated string.
      *
      * @ingroup oauth2_section_4
      */

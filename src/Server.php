@@ -60,7 +60,7 @@ class Server implements ResourceControllerInterface, AuthorizeControllerInterfac
     protected $scopeUtil;
     protected $clientAssertionType;
 
-    protected $storageMap = array(
+    protected $storageMap = [
         'access_token' => 'nAuth\storage\AccessTokenInterface',
         'authorization_code' => 'nAuth\storage\AuthorizationCodeInterface',
         'client_credentials' => 'nAuth\storage\ClientCredentialsInterface',
@@ -71,15 +71,15 @@ class Server implements ResourceControllerInterface, AuthorizeControllerInterfac
         'public_key' => 'nAuth\storage\PublicKeyInterface',
         'jwt_bearer' => 'nAuth\storage\JWTBearerInterface',
         'scope' => 'nAuth\storage\ScopeInterface',
-    );
+    ];
 
-    protected $responseTypeMap = array(
+    protected $responseTypeMap = [
         'token' => 'nAuth\responseType\AccessTokenInterface',
         'code' => 'nAuth\responseType\AuthorizationCodeInterface',
         'id_token' => 'nAuth\openID\responseType\IdTokenInterface',
         'id_token token' => 'nAuth\openID\responseType\IdTokenTokenInterface',
         'code id_token' => 'nAuth\openID\responseType\CodeIdTokenInterface',
-    );
+    ];
 
     /**
      * @param mixed $storage (array or OAuth2\Storage) - single object or array of objects implementing the
@@ -539,7 +539,7 @@ class Server implements ResourceControllerInterface, AuthorizeControllerInterfac
             $this->tokenType = $this->getDefaultTokenType();
         }
 
-        $config = array_intersect_key($this->config, array('www_realm' => ''));
+        $config = array_intersect_key($this->config, ['www_realm' => '']);
 
         return new UserInfoController($this->tokenType, $this->storages['access_token'], $this->storages['user_claims'], $config, $this->getScopeUtil());
     }

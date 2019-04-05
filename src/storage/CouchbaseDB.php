@@ -21,6 +21,7 @@ class CouchbaseDB implements AuthorizationCodeInterface,
     RefreshTokenInterface,
     JwtBearerInterface,
     OpenIDAuthorizationCodeInterface {
+
     protected $db;
     protected $config;
 
@@ -36,14 +37,14 @@ class CouchbaseDB implements AuthorizationCodeInterface,
             $this->db = new \Couchbase($connection['servers'], (!isset($connection['username'])) ? '' : $connection['username'], (!isset($connection['password'])) ? '' : $connection['password'], $connection['bucket'], false);
         }
 
-        $this->config = array_merge(array(
+        $this->config = array_merge([
             'client_table' => 'oauth_clients',
             'access_token_table' => 'oauth_access_tokens',
             'refresh_token_table' => 'oauth_refresh_tokens',
             'code_table' => 'oauth_authorization_codes',
             'user_table' => 'oauth_users',
             'jwt_table' => 'oauth_jwt',
-        ), $config);
+        ], $config);
     }
 
     // Helper function to access couchbase item by type:

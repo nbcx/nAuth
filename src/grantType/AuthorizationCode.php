@@ -1,5 +1,4 @@
 <?php
-
 namespace nAuth\grantType;
 
 use nAuth\storage\AuthorizationCodeInterface;

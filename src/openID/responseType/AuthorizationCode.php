@@ -10,15 +10,15 @@ use nAuth\openID\storage\AuthorizationCodeInterface as AuthorizationCodeStorageI
  */
 class AuthorizationCode extends BaseAuthorizationCode implements AuthorizationCodeInterface {
 
-    public function __construct(AuthorizationCodeStorageInterface $storage, array $config = array()) {
+    public function __construct(AuthorizationCodeStorageInterface $storage, array $config = []) {
         parent::__construct($storage, $config);
     }
 
     public function getAuthorizeResponse($params, $user_id = null) {
         // build the URL to redirect to
-        $result = array('query' => array());
+        $result = ['query' => []];
 
-        $params += array('scope' => null, 'state' => null, 'id_token' => null);
+        $params += ['scope' => null, 'state' => null, 'id_token' => null];
 
         $result['query']['code'] = $this->createAuthorizationCode($params['client_id'], $user_id, $params['redirect_uri'], $params['scope'], $params['id_token']);
 
@@ -26,7 +26,7 @@ class AuthorizationCode extends BaseAuthorizationCode implements AuthorizationCo
             $result['query']['state'] = $params['state'];
         }
 
-        return array($params['redirect_uri'], $result);
+        return [$params['redirect_uri'], $result];
     }
 
     /**
