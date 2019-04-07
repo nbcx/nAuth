@@ -43,10 +43,11 @@ class DynamoDB implements
     PublicKeyInterface,
     UserClaimsInterface,
     OpenIDAuthorizationCodeInterface {
+
     protected $client;
     protected $config;
 
-    public function __construct($connection, $config = array()) {
+    public function __construct($connection, $config = []) {
         if (!($connection instanceof DynamoDbClient)) {
             if (!is_array($connection)) {
                 throw new \InvalidArgumentException('First argument to OAuth2\Storage\Dynamodb must be an instance a configuration array containt key, secret, region');
@@ -54,17 +55,17 @@ class DynamoDB implements
             if (!array_key_exists("key", $connection) || !array_key_exists("secret", $connection) || !array_key_exists("region", $connection)) {
                 throw new \InvalidArgumentException('First argument to OAuth2\Storage\Dynamodb must be an instance a configuration array containt key, secret, region');
             }
-            $this->client = DynamoDbClient::factory(array(
+            $this->client = DynamoDbClient::factory([
                 'key' => $connection["key"],
                 'secret' => $connection["secret"],
                 'region' => $connection["region"]
-            ));
+            ]);
         }
         else {
             $this->client = $connection;
         }
 
-        $this->config = array_merge(array(
+        $this->config = array_merge([
             'client_table' => 'oauth_clients',
             'access_token_table' => 'oauth_access_tokens',
             'refresh_token_table' => 'oauth_refresh_tokens',
@@ -73,24 +74,24 @@ class DynamoDB implements
             'jwt_table' => 'oauth_jwt',
             'scope_table' => 'oauth_scopes',
             'public_key_table' => 'oauth_public_keys',
-        ), $config);
+        ], $config);
     }
 
     /* OAuth2\Storage\ClientCredentialsInterface */
     public function checkClientCredentials($client_id, $client_secret = null) {
-        $result = $this->client->getItem(array(
+        $result = $this->client->getItem([
             "TableName" => $this->config['client_table'],
-            "Key" => array('client_id' => array('S' => $client_id))
-        ));
+            "Key" => ['client_id' => ['S' => $client_id]]
+        ]);
 
         return $result->count() == 1 && $result["Item"]["client_secret"]["S"] == $client_secret;
     }
 
     public function isPublicClient($client_id) {
-        $result = $this->client->getItem(array(
+        $result = $this->client->getItem([
             "TableName" => $this->config['client_table'],
-            "Key" => array('client_id' => array('S' => $client_id))
-        ));
+            "Key" => ['client_id' => ['S' => $client_id]]
+        ]);
 
         if ($result->count() == 0) {
             return false;
@@ -101,15 +102,15 @@ class DynamoDB implements
 
     /* OAuth2\Storage\ClientInterface */
     public function getClientDetails($client_id) {
-        $result = $this->client->getItem(array(
+        $result = $this->client->getItem([
             "TableName" => $this->config['client_table'],
-            "Key" => array('client_id' => array('S' => $client_id))
-        ));
+            "Key" => ['client_id' => ['S' => $client_id]]
+        ]);
         if ($result->count() == 0) {
             return false;
         }
         $result = $this->dynamo2array($result);
-        foreach (array('client_id', 'client_secret', 'redirect_uri', 'grant_types', 'scope', 'user_id') as $key => $val) {
+        foreach (['client_id', 'client_secret', 'redirect_uri', 'grant_types', 'scope', 'user_id'] as $key => $val) {
             if (!array_key_exists($val, $result)) {
                 $result[$val] = null;
             }
@@ -120,12 +121,14 @@ class DynamoDB implements
 
     public function setClientDetails($client_id, $client_secret = null, $redirect_uri = null, $grant_types = null, $scope = null, $user_id = null) {
         $clientData = compact('client_id', 'client_secret', 'redirect_uri', 'grant_types', 'scope', 'user_id');
-        $clientData = array_filter($clientData, function ($value) { return !is_null($value); });
+        $clientData = array_filter($clientData, function ($value) {
+            return !is_null($value);
+        });
 
-        $result = $this->client->putItem(array(
+        $result = $this->client->putItem([
             'TableName' => $this->config['client_table'],
             'Item' => $this->client->formatAttributes($clientData)
-        ));
+        ]);
 
         return true;
     }
@@ -144,10 +147,10 @@ class DynamoDB implements
 
     /* OAuth2\Storage\AccessTokenInterface */
     public function getAccessToken($access_token) {
-        $result = $this->client->getItem(array(
+        $result = $this->client->getItem([
             "TableName" => $this->config['access_token_table'],
-            "Key" => array('access_token' => array('S' => $access_token))
-        ));
+            "Key" => ['access_token' => ['S' => $access_token]]
+        ]);
         if ($result->count() == 0) {
             return false;
         }
@@ -164,32 +167,34 @@ class DynamoDB implements
         $expires = date('Y-m-d H:i:s', $expires);
 
         $clientData = compact('access_token', 'client_id', 'user_id', 'expires', 'scope');
-        $clientData = array_filter($clientData, function ($value) { return !empty($value); });
+        $clientData = array_filter($clientData, function ($value) {
+            return !empty($value);
+        });
 
-        $result = $this->client->putItem(array(
+        $result = $this->client->putItem([
             'TableName' => $this->config['access_token_table'],
             'Item' => $this->client->formatAttributes($clientData)
-        ));
+        ]);
 
         return true;
 
     }
 
     public function unsetAccessToken($access_token) {
-        $result = $this->client->deleteItem(array(
+        $result = $this->client->deleteItem([
             'TableName' => $this->config['access_token_table'],
-            'Key' => $this->client->formatAttributes(array("access_token" => $access_token))
-        ));
+            'Key' => $this->client->formatAttributes(["access_token" => $access_token])
+        ]);
 
         return true;
     }
 
     /* OAuth2\Storage\AuthorizationCodeInterface */
     public function getAuthorizationCode($code) {
-        $result = $this->client->getItem(array(
+        $result = $this->client->getItem([
             "TableName" => $this->config['code_table'],
-            "Key" => array('authorization_code' => array('S' => $code))
-        ));
+            "Key" => ['authorization_code' => ['S' => $code]]
+        ]);
         if ($result->count() == 0) {
             return false;
         }
@@ -208,22 +213,24 @@ class DynamoDB implements
         $expires = date('Y-m-d H:i:s', $expires);
 
         $clientData = compact('authorization_code', 'client_id', 'user_id', 'redirect_uri', 'expires', 'id_token', 'scope');
-        $clientData = array_filter($clientData, function ($value) { return !empty($value); });
+        $clientData = array_filter($clientData, function ($value) {
+            return !empty($value);
+        });
 
-        $result = $this->client->putItem(array(
+        $result = $this->client->putItem([
             'TableName' => $this->config['code_table'],
             'Item' => $this->client->formatAttributes($clientData)
-        ));
+        ]);
 
         return true;
     }
 
     public function expireAuthorizationCode($code) {
 
-        $result = $this->client->deleteItem(array(
+        $result = $this->client->deleteItem([
             'TableName' => $this->config['code_table'],
-            'Key' => $this->client->formatAttributes(array("authorization_code" => $code))
-        ));
+            'Key' => $this->client->formatAttributes(["authorization_code" => $code])
+        ]);
 
         return true;
     }
@@ -248,7 +255,7 @@ class DynamoDB implements
         }
 
         $claims = explode(' ', trim($claims));
-        $userClaims = array();
+        $userClaims = [];
 
         // for each requested claim, if the user has the claim, set it in the response
         $validClaims = explode(' ', self::VALID_CLAIMS);
@@ -268,7 +275,7 @@ class DynamoDB implements
     }
 
     protected function getUserClaim($claim, $userDetails) {
-        $userClaims = array();
+        $userClaims = [];
         $claimValuesString = constant(sprintf('self::%s_CLAIM_VALUES', strtoupper($claim)));
         $claimValues = explode(' ', $claimValuesString);
 
@@ -286,10 +293,10 @@ class DynamoDB implements
 
     /* OAuth2\Storage\RefreshTokenInterface */
     public function getRefreshToken($refresh_token) {
-        $result = $this->client->getItem(array(
+        $result = $this->client->getItem([
             "TableName" => $this->config['refresh_token_table'],
-            "Key" => array('refresh_token' => array('S' => $refresh_token))
-        ));
+            "Key" => ['refresh_token' => ['S' => $refresh_token]]
+        ]);
         if ($result->count() == 0) {
             return false;
         }
@@ -304,21 +311,23 @@ class DynamoDB implements
         $expires = date('Y-m-d H:i:s', $expires);
 
         $clientData = compact('refresh_token', 'client_id', 'user_id', 'expires', 'scope');
-        $clientData = array_filter($clientData, function ($value) { return !empty($value); });
+        $clientData = array_filter($clientData, function ($value) {
+            return !empty($value);
+        });
 
-        $result = $this->client->putItem(array(
+        $result = $this->client->putItem([
             'TableName' => $this->config['refresh_token_table'],
             'Item' => $this->client->formatAttributes($clientData)
-        ));
+        ]);
 
         return true;
     }
 
     public function unsetRefreshToken($refresh_token) {
-        $result = $this->client->deleteItem(array(
+        $result = $this->client->deleteItem([
             'TableName' => $this->config['refresh_token_table'],
-            'Key' => $this->client->formatAttributes(array("refresh_token" => $refresh_token))
-        ));
+            'Key' => $this->client->formatAttributes(["refresh_token" => $refresh_token])
+        ]);
 
         return true;
     }
@@ -329,10 +338,10 @@ class DynamoDB implements
     }
 
     public function getUser($username) {
-        $result = $this->client->getItem(array(
+        $result = $this->client->getItem([
             "TableName" => $this->config['user_table'],
-            "Key" => array('username' => array('S' => $username))
-        ));
+            "Key" => ['username' => ['S' => $username]]
+        ]);
         if ($result->count() == 0) {
             return false;
         }
@@ -347,12 +356,14 @@ class DynamoDB implements
         $password = sha1($password);
 
         $clientData = compact('username', 'password', 'first_name', 'last_name');
-        $clientData = array_filter($clientData, function ($value) { return !is_null($value); });
+        $clientData = array_filter($clientData, function ($value) {
+            return !is_null($value);
+        });
 
-        $result = $this->client->putItem(array(
+        $result = $this->client->putItem([
             'TableName' => $this->config['user_table'],
             'Item' => $this->client->formatAttributes($clientData)
-        ));
+        ]);
 
         return true;
 
@@ -361,19 +372,19 @@ class DynamoDB implements
     /* ScopeInterface */
     public function scopeExists($scope) {
         $scope = explode(' ', $scope);
-        $scope_query = array();
+        $scope_query = [];
         $count = 0;
         foreach ($scope as $key => $val) {
-            $result = $this->client->query(array(
+            $result = $this->client->query([
                 'TableName' => $this->config['scope_table'],
                 'Select' => 'COUNT',
-                'KeyConditions' => array(
-                    'scope' => array(
-                        'AttributeValueList' => array(array('S' => $val)),
+                'KeyConditions' => [
+                    'scope' => [
+                        'AttributeValueList' => [['S' => $val]],
                         'ComparisonOperator' => 'EQ'
-                    )
-                )
-            ));
+                    ]
+                ]
+            ]);
             $count += $result['Count'];
         }
 
@@ -382,18 +393,18 @@ class DynamoDB implements
 
     public function getDefaultScope($client_id = null) {
 
-        $result = $this->client->query(array(
+        $result = $this->client->query([
             'TableName' => $this->config['scope_table'],
             'IndexName' => 'is_default-index',
             'Select' => 'ALL_ATTRIBUTES',
-            'KeyConditions' => array(
-                'is_default' => array(
-                    'AttributeValueList' => array(array('S' => 'true')),
+            'KeyConditions' => [
+                'is_default' => [
+                    'AttributeValueList' => [['S' => 'true']],
                     'ComparisonOperator' => 'EQ',
-                ),
-            )
-        ));
-        $defaultScope = array();
+                ],
+            ]
+        ]);
+        $defaultScope = [];
         if ($result->count() > 0) {
             $array = $result->toArray();
             foreach ($array["Items"] as $item) {
@@ -408,10 +419,10 @@ class DynamoDB implements
 
     /* JWTBearerInterface */
     public function getClientKey($client_id, $subject) {
-        $result = $this->client->getItem(array(
+        $result = $this->client->getItem([
             "TableName" => $this->config['jwt_table'],
-            "Key" => array('client_id' => array('S' => $client_id), 'subject' => array('S' => $subject))
-        ));
+            "Key" => ['client_id' => ['S' => $client_id], 'subject' => ['S' => $subject]]
+        ]);
         if ($result->count() == 0) {
             return false;
         }
@@ -443,10 +454,10 @@ class DynamoDB implements
     /* PublicKeyInterface */
     public function getPublicKey($client_id = '0') {
 
-        $result = $this->client->getItem(array(
+        $result = $this->client->getItem([
             "TableName" => $this->config['public_key_table'],
-            "Key" => array('client_id' => array('S' => $client_id))
-        ));
+            "Key" => ['client_id' => ['S' => $client_id]]
+        ]);
         if ($result->count() == 0) {
             return false;
         }
@@ -457,10 +468,10 @@ class DynamoDB implements
     }
 
     public function getPrivateKey($client_id = '0') {
-        $result = $this->client->getItem(array(
+        $result = $this->client->getItem([
             "TableName" => $this->config['public_key_table'],
-            "Key" => array('client_id' => array('S' => $client_id))
-        ));
+            "Key" => ['client_id' => ['S' => $client_id]]
+        ]);
         if ($result->count() == 0) {
             return false;
         }
@@ -470,10 +481,10 @@ class DynamoDB implements
     }
 
     public function getEncryptionAlgorithm($client_id = null) {
-        $result = $this->client->getItem(array(
+        $result = $this->client->getItem([
             "TableName" => $this->config['public_key_table'],
-            "Key" => array('client_id' => array('S' => $client_id))
-        ));
+            "Key" => ['client_id' => ['S' => $client_id]]
+        ]);
         if ($result->count() == 0) {
             return 'RS256';
         }
@@ -488,7 +499,7 @@ class DynamoDB implements
      * @return $array
      */
     private function dynamo2array($dynamodbResult) {
-        $result = array();
+        $result = [];
         foreach ($dynamodbResult["Item"] as $key => $val) {
             $result[$key] = $val["S"];
             $result[] = $val["S"];

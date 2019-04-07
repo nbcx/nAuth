@@ -39,7 +39,7 @@ class Redis implements AuthorizationCodeInterface,
      */
     public function __construct($redis, $config = []) {
         $this->redis = $redis;
-        $this->config = array_merge(array(
+        $this->config = array_merge([
             'client_key' => 'oauth_clients:',
             'access_token_key' => 'oauth_access_tokens:',
             'refresh_token_key' => 'oauth_refresh_tokens:',
@@ -47,7 +47,7 @@ class Redis implements AuthorizationCodeInterface,
             'user_key' => 'oauth_users:',
             'jwt_key' => 'oauth_jwt:',
             'scope_key' => 'oauth_scopes:',
-        ), $config);
+        ], $config);
     }
 
     protected function getValue($key) {
@@ -258,10 +258,10 @@ class Redis implements AuthorizationCodeInterface,
     }
 
     public function setClientKey($client_id, $key, $subject = null) {
-        return $this->setValue($this->config['jwt_key'] . $client_id, array(
+        return $this->setValue($this->config['jwt_key'] . $client_id, [
             'key' => $key,
             'subject' => $subject
-        ));
+        ]);
     }
 
     public function getClientScope($client_id) {

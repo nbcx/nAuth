@@ -22,14 +22,14 @@ class UserInfoController extends ResourceController implements UserInfoControlle
     protected $config;
     protected $scopeUtil;
 
-    public function __construct(TokenTypeInterface $tokenType, AccessTokenInterface $tokenStorage, UserClaimsInterface $userClaimsStorage, $config = array(), ScopeInterface $scopeUtil = null) {
+    public function __construct(TokenTypeInterface $tokenType, AccessTokenInterface $tokenStorage, UserClaimsInterface $userClaimsStorage, $config = [], ScopeInterface $scopeUtil = null) {
         $this->tokenType = $tokenType;
         $this->tokenStorage = $tokenStorage;
         $this->userClaimsStorage = $userClaimsStorage;
 
-        $this->config = array_merge(array(
+        $this->config = array_merge([
             'www_realm' => 'Service',
-        ), $config);
+        ], $config);
 
         if (is_null($scopeUtil)) {
             $scopeUtil = new Scope();
@@ -46,9 +46,9 @@ class UserInfoController extends ResourceController implements UserInfoControlle
         $claims = $this->userClaimsStorage->getUserClaims($token['user_id'], $token['scope']);
         // The sub Claim MUST always be returned in the UserInfo Response.
         // http://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse
-        $claims += array(
+        $claims += [
             'sub' => $token['user_id'],
-        );
+        ];
         $response->addParameters($claims);
     }
 }

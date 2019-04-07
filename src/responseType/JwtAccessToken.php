@@ -24,12 +24,12 @@ class JwtAccessToken extends AccessToken {
      *       whether the entire encrypted string is stored,
      *       or just the token ID is stored
      */
-    public function __construct(PublicKeyInterface $publicKeyStorage = null, AccessTokenStorageInterface $tokenStorage = null, RefreshTokenInterface $refreshStorage = null, array $config = array(), EncryptionInterface $encryptionUtil = null) {
+    public function __construct(PublicKeyInterface $publicKeyStorage = null, AccessTokenStorageInterface $tokenStorage = null, RefreshTokenInterface $refreshStorage = null, array $config = [], EncryptionInterface $encryptionUtil = null) {
         $this->publicKeyStorage = $publicKeyStorage;
-        $config = array_merge(array(
+        $config = array_merge([
             'store_encrypted_token_string' => true,
             'issuer' => ''
-        ), $config);
+        ], $config);
         if (is_null($tokenStorage)) {
             // a pass-thru, so we can call the parent constructor
             $tokenStorage = new Memory();
@@ -60,7 +60,7 @@ class JwtAccessToken extends AccessToken {
         // token to encrypt
         $expires = time() + $this->config['access_lifetime'];
         $id = $this->generateAccessToken();
-        $jwtAccessToken = array(
+        $jwtAccessToken = [
             'id' => $id, // for BC (see #591)
             'jti' => $id,
             'iss' => $this->config['issuer'],
@@ -70,7 +70,7 @@ class JwtAccessToken extends AccessToken {
             'iat' => time(),
             'token_type' => $this->config['token_type'],
             'scope' => $scope
-        );
+        ];
 
         /*
          * Encode the token data into a single access_token string
@@ -86,12 +86,12 @@ class JwtAccessToken extends AccessToken {
         $this->tokenStorage->setAccessToken($token_to_store, $client_id, $user_id, $this->config['access_lifetime'] ? time() + $this->config['access_lifetime'] : null, $scope);
 
         // token to return to the client
-        $token = array(
+        $token = [
             'access_token' => $access_token,
             'expires_in' => $this->config['access_lifetime'],
             'token_type' => $this->config['token_type'],
             'scope' => $scope
-        );
+        ];
 
         /*
          * Issue a refresh token also, if we support them

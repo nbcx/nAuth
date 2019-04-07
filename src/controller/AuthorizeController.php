@@ -38,7 +38,7 @@ class AuthorizeController implements AuthorizeControllerInterface {
      *                                                      </code>
      * @param OAuth2\ScopeInterface $scopeUtil OPTIONAL Instance of OAuth2\ScopeInterface to validate the requested scope
      */
-    public function __construct(ClientInterface $clientStorage, array $responseTypes = array(), array $config = array(), ScopeInterface $scopeUtil = null) {
+    public function __construct(ClientInterface $clientStorage, array $responseTypes = [], array $config = [], ScopeInterface $scopeUtil = null) {
         $this->clientStorage = $clientStorage;
         $this->responseTypes = $responseTypes;
         $this->config = array_merge(array(

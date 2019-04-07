@@ -34,7 +34,7 @@ class JwtBearer implements GrantTypeInterface, ClientAssertionTypeInterface
      * @param EncryptionInterface|OAuth2\Encryption\JWT $jwtUtil OPTONAL The class used to decode, encode and verify JWTs.
      * @param array $config
      */
-    public function __construct(JwtBearerInterface $storage, $audience, EncryptionInterface $jwtUtil = null, array $config = array())
+    public function __construct(JwtBearerInterface $storage, $audience, EncryptionInterface $jwtUtil = null, array $config = [])
     {
         $this->storage = $storage;
         $this->audience = $audience;
@@ -43,9 +43,9 @@ class JwtBearer implements GrantTypeInterface, ClientAssertionTypeInterface
             $jwtUtil = new Jwt();
         }
 
-        $this->config = array_merge(array(
-            'allowed_algorithms' => array('RS256', 'RS384', 'RS512')
-        ), $config);
+        $this->config = array_merge([
+            'allowed_algorithms' => ['RS256', 'RS384', 'RS512']
+        ], $config);
 
         $this->jwtUtil = $jwtUtil;
 
@@ -95,7 +95,7 @@ class JwtBearer implements GrantTypeInterface, ClientAssertionTypeInterface
 
         // ensure these properties contain a value
         // @todo: throw malformed error for missing properties
-        $jwt = array_merge(array(
+        $jwt = array_merge([
             'scope' => null,
             'iss' => null,
             'sub' => null,
@@ -105,7 +105,7 @@ class JwtBearer implements GrantTypeInterface, ClientAssertionTypeInterface
             'iat' => null,
             'jti' => null,
             'typ' => null,
-        ), $jwt);
+        ], $jwt);
 
         if (!isset($jwt['iss'])) {
             $response->setError(400, 'invalid_grant', "Invalid issuer (iss) provided");

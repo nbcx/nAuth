@@ -21,13 +21,13 @@ class ResourceController implements ResourceControllerInterface {
     protected $config;
     protected $scopeUtil;
 
-    public function __construct(TokenTypeInterface $tokenType, AccessTokenInterface $tokenStorage, $config = array(), ScopeInterface $scopeUtil = null) {
+    public function __construct(TokenTypeInterface $tokenType, AccessTokenInterface $tokenStorage, $config = [], ScopeInterface $scopeUtil = null) {
         $this->tokenType = $tokenType;
         $this->tokenStorage = $tokenStorage;
 
-        $this->config = array_merge(array(
+        $this->config = array_merge([
             'www_realm' => 'Service',
-        ), $config);
+        ], $config);
 
         if (is_null($scopeUtil)) {
             $scopeUtil = new Scope();
@@ -50,7 +50,7 @@ class ResourceController implements ResourceControllerInterface {
          */
         if ($scope && (!isset($token["scope"]) || !$token["scope"] || !$this->scopeUtil->checkScope($scope, $token["scope"]))) {
             $response->setError(403, 'insufficient_scope', 'The request requires higher privileges than provided by the access token');
-            $response->addHttpHeaders(array(
+            $response->addHttpHeaders([
                 'WWW-Authenticate' => sprintf('%s realm="%s", scope="%s", error="%s", error_description="%s"',
                     $this->tokenType->getTokenType(),
                     $this->config['www_realm'],
@@ -58,7 +58,7 @@ class ResourceController implements ResourceControllerInterface {
                     $response->getParameter('error'),
                     $response->getParameter('error_description')
                 )
-            ));
+            ]);
 
             return false;
         }
@@ -98,7 +98,7 @@ class ResourceController implements ResourceControllerInterface {
             }
         }
 
-        $response->addHttpHeaders(array('WWW-Authenticate' => $authHeader));
+        $response->addHttpHeaders(['WWW-Authenticate' => $authHeader]);
 
         return null;
     }

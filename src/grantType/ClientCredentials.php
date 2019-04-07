@@ -14,7 +14,7 @@ class ClientCredentials extends HttpBasic implements GrantTypeInterface {
 
     private $clientData;
 
-    public function __construct(ClientCredentialsInterface $storage, array $config = array()) {
+    public function __construct(ClientCredentialsInterface $storage, array $config = []) {
         /**
          * The client credentials grant type MUST only be used by confidential clients
          *

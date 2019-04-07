@@ -31,18 +31,18 @@ class AccessToken implements AccessTokenInterface {
         $this->tokenStorage = $tokenStorage;
         $this->refreshStorage = $refreshStorage;
 
-        $this->config = array_merge(array(
+        $this->config = array_merge([
             'token_type' => 'bearer',
             'access_lifetime' => 3600,
             'refresh_token_lifetime' => 1209600,
-        ), $config);
+        ], $config);
     }
 
     public function getAuthorizeResponse($params, $user_id = null) {
         // build the URL to redirect to
-        $result = array('query' => array());
+        $result = ['query' => []];
 
-        $params += array('scope' => null, 'state' => null);
+        $params += ['scope' => null, 'state' => null];
 
         /*
          * a refresh token MUST NOT be included in the fragment
@@ -56,7 +56,7 @@ class AccessToken implements AccessTokenInterface {
             $result["fragment"]["state"] = $params['state'];
         }
 
-        return array($params['redirect_uri'], $result);
+        return [$params['redirect_uri'], $result];
     }
 
     /**
@@ -71,12 +71,12 @@ class AccessToken implements AccessTokenInterface {
      * @ingroup oauth2_section_5
      */
     public function createAccessToken($client_id, $user_id, $scope = null, $includeRefreshToken = true) {
-        $token = array(
+        $token = [
             "access_token" => $this->generateAccessToken(),
             "expires_in" => $this->config['access_lifetime'],
             "token_type" => $this->config['token_type'],
             "scope" => $scope
-        );
+        ];
 
         $this->tokenStorage->setAccessToken($token["access_token"], $client_id, $user_id, $this->config['access_lifetime'] ? time() + $this->config['access_lifetime'] : null, $scope);
 
@@ -170,7 +170,7 @@ class AccessToken implements AccessTokenInterface {
         if (!method_exists($this->tokenStorage, 'unsetAccessToken')) {
             throw new \RuntimeException(
                 sprintf('Token storage %s must implement unsetAccessToken method', get_class($this->tokenStorage)
-                ));
+            ));
         }
 
         $revoked = $this->tokenStorage->unsetAccessToken($token);

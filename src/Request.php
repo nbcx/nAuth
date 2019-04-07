@@ -9,6 +9,7 @@ use LogicException;
  * See Symfony\Component\HttpFoundation\Request (https://github.com/symfony/symfony)
  */
 class Request implements RequestInterface {
+
     public $attributes;
     public $request;
     public $query;
@@ -32,7 +33,7 @@ class Request implements RequestInterface {
      *
      * @api
      */
-    public function __construct(array $query = array(), array $request = array(), array $attributes = array(), array $cookies = array(), array $files = array(), array $server = array(), $content = null, array $headers = null) {
+    public function __construct(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null, array $headers = null) {
         $this->initialize($query, $request, $attributes, $cookies, $files, $server, $content, $headers);
     }
 
@@ -52,7 +53,7 @@ class Request implements RequestInterface {
      *
      * @api
      */
-    public function initialize(array $query = array(), array $request = array(), array $attributes = array(), array $cookies = array(), array $files = array(), array $server = array(), $content = null, array $headers = null) {
+    public function initialize(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null, array $headers = null) {
         $this->request = $request;
         $this->query = $query;
         $this->attributes = $attributes;
@@ -62,7 +63,7 @@ class Request implements RequestInterface {
         $this->content = $content;
 
         if ($headers === null) {
-            $headers = array();
+            $headers = [];
         }
 
         $this->headers = $headers + $this->getHeadersFromServer($this->server);
@@ -145,13 +146,13 @@ class Request implements RequestInterface {
      * @return array
      */
     private function getHeadersFromServer($server) {
-        $headers = array();
+        $headers = [];
         foreach ($server as $key => $value) {
             if (0 === strpos($key, 'HTTP_')) {
                 $headers[substr($key, 5)] = $value;
             }
             // CONTENT_* are not prefixed with HTTP_
-            elseif (in_array($key, array('CONTENT_LENGTH', 'CONTENT_MD5', 'CONTENT_TYPE'))) {
+            elseif (in_array($key, ['CONTENT_LENGTH', 'CONTENT_MD5', 'CONTENT_TYPE'])) {
                 $headers[$key] = $value;
             }
         }
@@ -222,18 +223,18 @@ class Request implements RequestInterface {
         $class = get_called_class();
 
         /** @var Request $request */
-        $request = new $class($_GET, $_POST, array(), $_COOKIE, $_FILES, $_SERVER);
+        $request = new $class($_GET, $_POST, [], $_COOKIE, $_FILES, $_SERVER);
 
         $contentType = $request->server('CONTENT_TYPE', '');
         $requestMethod = $request->server('REQUEST_METHOD', 'GET');
         if (0 === strpos($contentType, 'application/x-www-form-urlencoded')
-            && in_array(strtoupper($requestMethod), array('PUT', 'DELETE'))
+            && in_array(strtoupper($requestMethod), ['PUT', 'DELETE'])
         ) {
             parse_str($request->getContent(), $data);
             $request->request = $data;
         }
         elseif (0 === strpos($contentType, 'application/json')
-            && in_array(strtoupper($requestMethod), array('POST', 'PUT', 'DELETE'))
+            && in_array(strtoupper($requestMethod), ['POST', 'PUT', 'DELETE'])
         ) {
             $data = json_decode($request->getContent(), true);
             $request->request = $data;

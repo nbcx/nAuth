@@ -9,6 +9,7 @@ use nAuth\encryption\Jwt;
  * @author Brent Shaffer <bshafs at gmail dot com>
  */
 class JwtAccessToken implements JwtAccessTokenInterface {
+
     protected $publicKeyStorage;
     protected $tokenStorage;
     protected $encryptionUtil;
@@ -40,7 +41,7 @@ class JwtAccessToken implements JwtAccessTokenInterface {
         $algorithm = $this->publicKeyStorage->getEncryptionAlgorithm($client_id);
 
         // now that we have the client_id, verify the token
-        if (false === $this->encryptionUtil->decode($oauth_token, $public_key, array($algorithm))) {
+        if (false === $this->encryptionUtil->decode($oauth_token, $public_key, [$algorithm])) {
             return false;
         }
 
@@ -63,11 +64,11 @@ class JwtAccessToken implements JwtAccessTokenInterface {
 
     // converts a JWT access token into an OAuth2-friendly format
     protected function convertJwtToOAuth2($tokenData) {
-        $keyMapping = array(
+        $keyMapping = [
             'aud' => 'client_id',
             'exp' => 'expires',
             'sub' => 'user_id'
-        );
+        ];
 
         foreach ($keyMapping as $jwtKey => $oauth2Key) {
             if (isset($tokenData[$jwtKey])) {

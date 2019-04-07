@@ -95,7 +95,7 @@ class Server implements ResourceControllerInterface, AuthorizeControllerInterfac
      * @ingroup oauth2_section_7
      */
     public function __construct($storage = [], array $config = [], array $grantTypes = [], array $responseTypes = [], TokenTypeInterface $tokenType = null, ScopeInterface $scopeUtil = null, ClientAssertionTypeInterface $clientAssertionType = null) {
-        $storage = is_array($storage) ? $storage : array($storage);
+        $storage = is_array($storage) ? $storage : [$storage];
         $this->storages = [];
         foreach ($storage as $key => $service) {
             $this->addStorage($service, $key);
@@ -515,7 +515,7 @@ class Server implements ResourceControllerInterface, AuthorizeControllerInterfac
             $this->tokenType = $this->getDefaultTokenType();
         }
 
-        $config = array_intersect_key($this->config, array('www_realm' => ''));
+        $config = array_intersect_key($this->config, ['www_realm' => '']);
 
         return new ResourceController($this->tokenType, $this->storages['access_token'], $config, $this->getScopeUtil());
     }
@@ -551,7 +551,7 @@ class Server implements ResourceControllerInterface, AuthorizeControllerInterfac
     }
 
     protected function getDefaultResponseTypes() {
-        $responseTypes = array();
+        $responseTypes = [];
 
         if ($this->config['allow_implicit']) {
             $responseTypes['token'] = $this->getAccessTokenResponseType();
@@ -586,14 +586,14 @@ class Server implements ResourceControllerInterface, AuthorizeControllerInterfac
     }
 
     protected function getDefaultGrantTypes() {
-        $grantTypes = array();
+        $grantTypes = [];
 
         if (isset($this->storages['user_credentials'])) {
             $grantTypes['password'] = new UserCredentials($this->storages['user_credentials']);
         }
 
         if (isset($this->storages['client_credentials'])) {
-            $config = array_intersect_key($this->config, array('allow_credentials_in_request_body' => ''));
+            $config = array_intersect_key($this->config, ['allow_credentials_in_request_body' => '']);
             $grantTypes['client_credentials'] = new ClientCredentials($this->storages['client_credentials'], $config);
         }
 

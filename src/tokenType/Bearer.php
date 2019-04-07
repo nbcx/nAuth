@@ -10,11 +10,11 @@ use nAuth\ResponseInterface;
 class Bearer implements TokenTypeInterface {
     private $config;
 
-    public function __construct(array $config = array()) {
-        $this->config = array_merge(array(
+    public function __construct(array $config = []) {
+        $this->config = array_merge([
             'token_param_name' => 'access_token',
             'token_bearer_header_name' => 'Bearer',
-        ), $config);
+        ], $config);
     }
 
     public function getTokenType() {
@@ -96,7 +96,7 @@ class Bearer implements TokenTypeInterface {
 
         if ($request->request($this->config['token_param_name'])) {
             // // POST: Get the token from POST data
-            if (!in_array(strtolower($request->server('REQUEST_METHOD')), array('post', 'put'))) {
+            if (!in_array(strtolower($request->server('REQUEST_METHOD')), ['post', 'put'])) {
                 $response->setError(400, 'invalid_request', 'When putting the token in the body, the method must be POST or PUT', '#section-2.2');
 
                 return null;

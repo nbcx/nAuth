@@ -25,7 +25,7 @@ class CouchbaseDB implements AuthorizationCodeInterface,
     protected $db;
     protected $config;
 
-    public function __construct($connection, $config = array()) {
+    public function __construct($connection, $config = []) {
         if ($connection instanceof \Couchbase) {
             $this->db = $connection;
         }
@@ -91,24 +91,24 @@ class CouchbaseDB implements AuthorizationCodeInterface,
     public function setClientDetails($client_id, $client_secret = null, $redirect_uri = null, $grant_types = null, $scope = null, $user_id = null) {
         if ($this->getClientDetails($client_id)) {
 
-            $this->setObjectByType('client_table', $client_id, array(
+            $this->setObjectByType('client_table', $client_id, [
                 'client_id' => $client_id,
                 'client_secret' => $client_secret,
                 'redirect_uri' => $redirect_uri,
                 'grant_types' => $grant_types,
                 'scope' => $scope,
                 'user_id' => $user_id,
-            ));
+            ]);
         }
         else {
-            $this->setObjectByType('client_table', $client_id, array(
+            $this->setObjectByType('client_table', $client_id, [
                 'client_id' => $client_id,
                 'client_secret' => $client_secret,
                 'redirect_uri' => $redirect_uri,
                 'grant_types' => $grant_types,
                 'scope' => $scope,
                 'user_id' => $user_id,
-            ));
+            ]);
         }
 
         return true;
@@ -136,22 +136,22 @@ class CouchbaseDB implements AuthorizationCodeInterface,
     public function setAccessToken($access_token, $client_id, $user_id, $expires, $scope = null) {
         // if it exists, update it.
         if ($this->getAccessToken($access_token)) {
-            $this->setObjectByType('access_token_table', $access_token, array(
+            $this->setObjectByType('access_token_table', $access_token, [
                 'access_token' => $access_token,
                 'client_id' => $client_id,
                 'expires' => $expires,
                 'user_id' => $user_id,
                 'scope' => $scope
-            ));
+            ]);
         }
         else {
-            $this->setObjectByType('access_token_table', $access_token, array(
+            $this->setObjectByType('access_token_table', $access_token, [
                 'access_token' => $access_token,
                 'client_id' => $client_id,
                 'expires' => $expires,
                 'user_id' => $user_id,
                 'scope' => $scope
-            ));
+            ]);
         }
 
         return true;
@@ -167,7 +167,7 @@ class CouchbaseDB implements AuthorizationCodeInterface,
     public function setAuthorizationCode($code, $client_id, $user_id, $redirect_uri, $expires, $scope = null, $id_token = null) {
         // if it exists, update it.
         if ($this->getAuthorizationCode($code)) {
-            $this->setObjectByType('code_table', $code, array(
+            $this->setObjectByType('code_table', $code, [
                 'authorization_code' => $code,
                 'client_id' => $client_id,
                 'user_id' => $user_id,
@@ -175,10 +175,10 @@ class CouchbaseDB implements AuthorizationCodeInterface,
                 'expires' => $expires,
                 'scope' => $scope,
                 'id_token' => $id_token,
-            ));
+            ]);
         }
         else {
-            $this->setObjectByType('code_table', $code, array(
+            $this->setObjectByType('code_table', $code, [
                 'authorization_code' => $code,
                 'client_id' => $client_id,
                 'user_id' => $user_id,
@@ -186,7 +186,7 @@ class CouchbaseDB implements AuthorizationCodeInterface,
                 'expires' => $expires,
                 'scope' => $scope,
                 'id_token' => $id_token,
-            ));
+            ]);
         }
 
         return true;
@@ -223,13 +223,13 @@ class CouchbaseDB implements AuthorizationCodeInterface,
     }
 
     public function setRefreshToken($refresh_token, $client_id, $user_id, $expires, $scope = null) {
-        $this->setObjectByType('refresh_token_table', $refresh_token, array(
+        $this->setObjectByType('refresh_token_table', $refresh_token, [
             'refresh_token' => $refresh_token,
             'client_id' => $client_id,
             'user_id' => $user_id,
             'expires' => $expires,
             'scope' => $scope
-        ));
+        ]);
 
         return true;
     }
@@ -253,21 +253,21 @@ class CouchbaseDB implements AuthorizationCodeInterface,
 
     public function setUser($username, $password, $firstName = null, $lastName = null) {
         if ($this->getUser($username)) {
-            $this->setObjectByType('user_table', $username, array(
+            $this->setObjectByType('user_table', $username, [
                 'username' => $username,
                 'password' => $password,
                 'first_name' => $firstName,
                 'last_name' => $lastName
-            ));
+            ]);
 
         }
         else {
-            $this->setObjectByType('user_table', $username, array(
+            $this->setObjectByType('user_table', $username, [
                 'username' => $username,
                 'password' => $password,
                 'first_name' => $firstName,
                 'last_name' => $lastName
-            ));
+            ]);
 
         }
 

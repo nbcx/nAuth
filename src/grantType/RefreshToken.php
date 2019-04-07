@@ -10,8 +10,8 @@ use nAuth\ResponseInterface;
  *
  * @author Brent Shaffer <bshafs at gmail dot com>
  */
-class RefreshToken implements GrantTypeInterface
-{
+class RefreshToken implements GrantTypeInterface {
+
     private $refreshToken;
 
     protected $storage;
@@ -19,20 +19,19 @@ class RefreshToken implements GrantTypeInterface
 
     /**
      * @param OAuth2\Storage\RefreshTokenInterface $storage REQUIRED Storage class for retrieving refresh token information
-     * @param array                                $config  OPTIONAL Configuration options for the server
-     *                                                      <code>
-     *                                                      $config = array(
-     *                                                      'always_issue_new_refresh_token' => true, // whether to issue a new refresh token upon successful token request
-     *                                                      'unset_refresh_token_after_use' => true // whether to unset the refresh token after after using
-     *                                                      );
-     *                                                      </code>
+     * @param array $config OPTIONAL Configuration options for the server
+     * <code>
+     * $config = array(
+     *     'always_issue_new_refresh_token' => true, // whether to issue a new refresh token upon successful token request
+     *     'unset_refresh_token_after_use' => true // whether to unset the refresh token after after using
+     *  );
+     * </code>
      */
-    public function __construct(RefreshTokenInterface $storage, $config = array())
-    {
-        $this->config = array_merge(array(
+    public function __construct(RefreshTokenInterface $storage, $config = []) {
+        $this->config = array_merge([
             'always_issue_new_refresh_token' => false,
             'unset_refresh_token_after_use' => true
-        ), $config);
+        ], $config);
 
         // to preserve B.C. with v1.6
         // @see https://github.com/bshaffer/oauth2-server-php/pull/580
@@ -44,13 +43,11 @@ class RefreshToken implements GrantTypeInterface
         $this->storage = $storage;
     }
 
-    public function getQuerystringIdentifier()
-    {
+    public function getQuerystringIdentifier() {
         return 'refresh_token';
     }
 
-    public function validateRequest(RequestInterface $request, ResponseInterface $response)
-    {
+    public function validateRequest(RequestInterface $request, ResponseInterface $response) {
         if (!$request->request("refresh_token")) {
             $response->setError(400, 'invalid_request', 'Missing parameter: "refresh_token" is required');
 
@@ -75,23 +72,19 @@ class RefreshToken implements GrantTypeInterface
         return true;
     }
 
-    public function getClientId()
-    {
+    public function getClientId() {
         return $this->refreshToken['client_id'];
     }
 
-    public function getUserId()
-    {
+    public function getUserId() {
         return isset($this->refreshToken['user_id']) ? $this->refreshToken['user_id'] : null;
     }
 
-    public function getScope()
-    {
+    public function getScope() {
         return isset($this->refreshToken['scope']) ? $this->refreshToken['scope'] : null;
     }
 
-    public function createAccessToken(AccessTokenInterface $accessToken, $client_id, $user_id, $scope)
-    {
+    public function createAccessToken(AccessTokenInterface $accessToken, $client_id, $user_id, $scope) {
         /*
          * It is optional to force a new refresh token when a refresh token is used.
          * However, if a new refresh token is issued, the old one MUST be expired

@@ -31,7 +31,7 @@ class Pdo implements
     protected $db;
     protected $config;
 
-    public function __construct($connection, $config = array()) {
+    public function __construct($connection, $config = []) {
         if (!$connection instanceof \PDO) {
             if (is_string($connection)) {
                 $connection = array('dsn' => $connection);
@@ -43,11 +43,11 @@ class Pdo implements
                 throw new \InvalidArgumentException('configuration array must contain "dsn"');
             }
             // merge optional parameters
-            $connection = array_merge(array(
+            $connection = array_merge([
                 'username' => null,
                 'password' => null,
-                'options' => array(),
-            ), $connection);
+                'options' => [],
+            ], $connection);
             $connection = new \PDO($connection['dsn'], $connection['username'], $connection['password'], $connection['options']);
         }
         $this->db = $connection;
@@ -55,7 +55,7 @@ class Pdo implements
         // debugging
         $connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-        $this->config = array_merge(array(
+        $this->config = array_merge([
             'client_table' => 'oauth_clients',
             'access_token_table' => 'oauth_access_tokens',
             'refresh_token_table' => 'oauth_refresh_tokens',
@@ -65,7 +65,7 @@ class Pdo implements
             'jti_table' => 'oauth_jti',
             'scope_table' => 'oauth_scopes',
             'public_key_table' => 'oauth_public_keys',
-        ), $config);
+        ], $config);
     }
 
     /* OAuth2\Storage\ClientCredentialsInterface */
@@ -171,7 +171,7 @@ class Pdo implements
     public function setAuthorizationCode($code, $client_id, $user_id, $redirect_uri, $expires, $scope = null, $id_token = null) {
         if (func_num_args() > 6) {
             // we are calling with an id token
-            return call_user_func_array(array($this, 'setAuthorizationCodeWithIdToken'), func_get_args());
+            return call_user_func_array([$this, 'setAuthorizationCodeWithIdToken'], func_get_args());
         }
 
         // convert expires to datestring
@@ -229,7 +229,7 @@ class Pdo implements
         }
 
         $claims = explode(' ', trim($claims));
-        $userClaims = array();
+        $userClaims = [];
 
         // for each requested claim, if the user has the claim, set it in the response
         $validClaims = explode(' ', self::VALID_CLAIMS);
@@ -249,7 +249,7 @@ class Pdo implements
     }
 
     protected function getUserClaim($claim, $userDetails) {
-        $userClaims = array();
+        $userClaims = [];
         $claimValuesString = constant(sprintf('self::%s_CLAIM_VALUES', strtoupper($claim)));
         $claimValues = explode(' ', $claimValuesString);
 
@@ -295,16 +295,16 @@ class Pdo implements
 
     public function getUser($username) {
         $stmt = $this->db->prepare($sql = sprintf('SELECT * from %s where username=:username', $this->config['user_table']));
-        $stmt->execute(array('username' => $username));
+        $stmt->execute(['username' => $username]);
 
         if (!$userInfo = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             return false;
         }
 
         // the default behavior is to use "username" as the user_id
-        return array_merge(array(
+        return array_merge([
             'user_id' => $username
-        ), $userInfo);
+        ], $userInfo);
     }
 
     public function setUser($username, $password, $firstName = null, $lastName = null) {
@@ -355,7 +355,7 @@ class Pdo implements
     public function getClientKey($client_id, $subject) {
         $stmt = $this->db->prepare($sql = sprintf('SELECT public_key from %s where client_id=:client_id AND subject=:subject', $this->config['jwt_table']));
 
-        $stmt->execute(array('client_id' => $client_id, 'subject' => $subject));
+        $stmt->execute(['client_id' => $client_id, 'subject' => $subject]);
 
         return $stmt->fetchColumn();
     }
@@ -378,13 +378,13 @@ class Pdo implements
         $stmt->execute(compact('client_id', 'subject', 'audience', 'expires', 'jti'));
 
         if ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            return array(
+            return [
                 'issuer' => $result['issuer'],
                 'subject' => $result['subject'],
                 'audience' => $result['audience'],
                 'expires' => $result['expires'],
                 'jti' => $result['jti'],
-            );
+            ];
         }
 
         return null;

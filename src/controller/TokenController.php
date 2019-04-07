@@ -48,7 +48,7 @@ class TokenController implements TokenControllerInterface {
             // server MUST disable caching in headers when tokens are involved
             $response->setStatusCode(200);
             $response->addParameters($token);
-            $response->addHttpHeaders(array('Cache-Control' => 'no-store', 'Pragma' => 'no-cache'));
+            $response->addHttpHeaders(['Cache-Control' => 'no-store', 'Pragma' => 'no-cache']);
         }
     }
 
@@ -72,7 +72,7 @@ class TokenController implements TokenControllerInterface {
     public function grantAccessToken(RequestInterface $request, ResponseInterface $response) {
         if (strtolower($request->server('REQUEST_METHOD')) != 'post') {
             $response->setError(405, 'invalid_request', 'The request method must be POST when requesting an access token', '#section-3.2');
-            $response->addHttpHeaders(array('Allow' => 'POST'));
+            $response->addHttpHeaders(['Allow' => 'POST']);
 
             return null;
         }
@@ -221,7 +221,7 @@ class TokenController implements TokenControllerInterface {
     public function handleRevokeRequest(RequestInterface $request, ResponseInterface $response) {
         if ($this->revokeToken($request, $response)) {
             $response->setStatusCode(200);
-            $response->addParameters(array('revoked' => true));
+            $response->addParameters(['revoked' => true]);
         }
     }
 
@@ -240,13 +240,13 @@ class TokenController implements TokenControllerInterface {
     public function revokeToken(RequestInterface $request, ResponseInterface $response) {
         if (strtolower($request->server('REQUEST_METHOD')) != 'post') {
             $response->setError(405, 'invalid_request', 'The request method must be POST when revoking an access token', '#section-3.2');
-            $response->addHttpHeaders(array('Allow' => 'POST'));
+            $response->addHttpHeaders(['Allow' => 'POST']);
 
             return null;
         }
 
         $token_type_hint = $request->request('token_type_hint');
-        if (!in_array($token_type_hint, array(null, 'access_token', 'refresh_token'), true)) {
+        if (!in_array($token_type_hint, [null, 'access_token', 'refresh_token'], true)) {
             $response->setError(400, 'invalid_request', 'Token type hint must be either \'access_token\' or \'refresh_token\'');
 
             return null;

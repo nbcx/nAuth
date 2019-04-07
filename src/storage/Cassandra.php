@@ -54,7 +54,7 @@ class Cassandra implements AuthorizationCodeInterface,
      * @param \phpcassa\ConnectionPool $cassandra
      * @param array $config
      */
-    public function __construct($connection = array(), array $config = array()) {
+    public function __construct($connection = [], array $config = []) {
         if ($connection instanceof ConnectionPool) {
             $this->cassandra = $connection;
         }
@@ -62,15 +62,15 @@ class Cassandra implements AuthorizationCodeInterface,
             if (!is_array($connection)) {
                 throw new \InvalidArgumentException('First argument to OAuth2\Storage\Cassandra must be an instance of phpcassa\Connection\ConnectionPool or a configuration array');
             }
-            $connection = array_merge(array(
+            $connection = array_merge([
                 'keyspace' => 'oauth2',
                 'servers' => null,
-            ), $connection);
+            ], $connection);
 
             $this->cassandra = new ConnectionPool($connection['keyspace'], $connection['servers']);
         }
 
-        $this->config = array_merge(array(
+        $this->config = array_merge([
             // cassandra config
             'column_family' => 'auth',
 
@@ -83,7 +83,7 @@ class Cassandra implements AuthorizationCodeInterface,
             'jwt_key' => 'oauth_jwt:',
             'scope_key' => 'oauth_scopes:',
             'public_key_key' => 'oauth_public_keys:',
-        ), $config);
+        ], $config);
     }
 
     protected function getValue($key) {
@@ -113,7 +113,7 @@ class Cassandra implements AuthorizationCodeInterface,
             try {
                 $seconds = $expire - time();
                 // __data key set as C* requires a field, note: max TTL can only be 630720000 seconds
-                $cf->insert($key, array('__data' => $str), null, $seconds);
+                $cf->insert($key, ['__data' => $str], null, $seconds);
             }
             catch (\Exception $e) {
                 return false;
@@ -122,7 +122,7 @@ class Cassandra implements AuthorizationCodeInterface,
         else {
             try {
                 // __data key set as C* requires a field
-                $cf->insert($key, array('__data' => $str));
+                $cf->insert($key, ['__data' => $str]);
             }
             catch (\Exception $e) {
                 return false;
@@ -138,7 +138,7 @@ class Cassandra implements AuthorizationCodeInterface,
         $cf = new ColumnFamily($this->cassandra, $this->config['column_family']);
         try {
             // __data key set as C* requires a field
-            $cf->remove($key, array('__data'));
+            $cf->remove($key, ['__data']);
         }
         catch (\Exception $e) {
             return false;
@@ -191,9 +191,9 @@ class Cassandra implements AuthorizationCodeInterface,
         }
 
         // the default behavior is to use "username" as the user_id
-        return array_merge(array(
+        return array_merge([
             'user_id' => $username,
-        ), $userInfo);
+        ], $userInfo);
     }
 
     public function setUser($username, $password, $first_name = null, $last_name = null) {
@@ -301,7 +301,7 @@ class Cassandra implements AuthorizationCodeInterface,
     }
 
     public function setScope($scope, $client_id = null, $type = 'supported') {
-        if (!in_array($type, array('default', 'supported'))) {
+        if (!in_array($type, ['default', 'supported'])) {
             throw new \InvalidArgumentException('"$type" must be one of "default", "supported"');
         }
 
@@ -329,10 +329,10 @@ class Cassandra implements AuthorizationCodeInterface,
     }
 
     public function setClientKey($client_id, $key, $subject = null) {
-        return $this->setValue($this->config['jwt_key'] . $client_id, array(
+        return $this->setValue($this->config['jwt_key'] . $client_id, [
             'key' => $key,
             'subject' => $subject
-        ));
+        ]);
     }
 
     /*ScopeInterface */

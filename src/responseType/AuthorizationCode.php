@@ -13,19 +13,19 @@ class AuthorizationCode implements AuthorizationCodeInterface {
     protected $storage;
     protected $config;
 
-    public function __construct(AuthorizationCodeStorageInterface $storage, array $config = array()) {
+    public function __construct(AuthorizationCodeStorageInterface $storage, array $config = []) {
         $this->storage = $storage;
-        $this->config = array_merge(array(
+        $this->config = array_merge([
             'enforce_redirect' => false,
             'auth_code_lifetime' => 30,
-        ), $config);
+        ], $config);
     }
 
     public function getAuthorizeResponse($params, $user_id = null) {
         // build the URL to redirect to
-        $result = array('query' => array());
+        $result = ['query' => []];
 
-        $params += array('scope' => null, 'state' => null);
+        $params += ['scope' => null, 'state' => null];
 
         $result['query']['code'] = $this->createAuthorizationCode($params['client_id'], $user_id, $params['redirect_uri'], $params['scope']);
 

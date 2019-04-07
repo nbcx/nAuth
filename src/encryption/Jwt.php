@@ -10,10 +10,10 @@ class Jwt implements EncryptionInterface {
     public function encode($payload, $key, $algo = 'HS256') {
         $header = $this->generateJwtHeader($payload, $algo);
 
-        $segments = array(
+        $segments = [
             $this->urlSafeB64Encode(json_encode($header)),
             $this->urlSafeB64Encode(json_encode($payload))
-        );
+        ];
 
         $signing_input = implode('.', $segments);
 
@@ -124,16 +124,16 @@ class Jwt implements EncryptionInterface {
 
     public function urlSafeB64Encode($data) {
         $b64 = base64_encode($data);
-        $b64 = str_replace(array('+', '/', "\r", "\n", '='),
-            array('-', '_'),
+        $b64 = str_replace(['+', '/', "\r", "\n", '='],
+            ['-', '_'],
             $b64);
 
         return $b64;
     }
 
     public function urlSafeB64Decode($b64) {
-        $b64 = str_replace(array('-', '_'),
-            array('+', '/'),
+        $b64 = str_replace(['-', '_'],
+            ['+', '/'],
             $b64);
 
         return base64_decode($b64);
