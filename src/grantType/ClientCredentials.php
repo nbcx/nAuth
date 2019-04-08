@@ -8,7 +8,7 @@ use nAuth\storage\ClientCredentialsInterface;
 /**
  * @author Brent Shaffer <bshafs at gmail dot com>
  *
- * @see OAuth2\ClientAssertionType_HttpBasic
+ * @see nAuth\ClientAssertionType_HttpBasic
  */
 class ClientCredentials extends HttpBasic implements GrantTypeInterface {
 

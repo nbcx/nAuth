@@ -4,9 +4,6 @@ namespace nAuth;
 use nAuth\storage\Memory;
 use nAuth\storage\ScopeInterface as ScopeStorageInterface;
 
-/**
- * @see OAuth2\ScopeInterface
- */
 class Scope implements ScopeInterface {
 
     protected $storage;
