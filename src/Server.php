@@ -36,9 +36,9 @@ use nAuth\dtorage\JwtAccessTokenInterface;
  * Server class for OAuth2
  * This class serves as a convience class which wraps the other Controller classes
  *
- * @see OAuth2\Controller\ResourceController
- * @see OAuth2\Controller\AuthorizeController
- * @see OAuth2\Controller\TokenController
+ * @see \nAuth\controller\ResourceController
+ * @see \nAuth\controller\AuthorizeController
+ * @see \nAuth\controller\TokenController
  */
 class Server implements ResourceControllerInterface, AuthorizeControllerInterface, TokenControllerInterface, UserInfoControllerInterface {
 
