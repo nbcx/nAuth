@@ -1,5 +1,5 @@
 {
-    "name": "nbcx/nAuth",
+    "name": "nbcx/oauth2-server",
     "description":"OAuth2 Server for PHP",
     "keywords":["oauth","oauth2","auth"],
     "type":"library",
@@ -11,9 +11,9 @@
             "homepage":"http://nb.cx"
         }
     ],
-    "homepage": "http://github.com/nbcx/nAuth",
+    "homepage": "http://github.com/nbcx/oauth-server",
     "autoload": {
-        "psr-0": { "nAuth": "src/" }
+        "psr-0": { "nbcx\\oauth\\server": "src/" }
     },
     "require":{
         "php":">=5.4.9"

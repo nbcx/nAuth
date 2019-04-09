@@ -1,9 +1,9 @@
 <?php
-namespace nAuth\clientAssertionType;
+namespace nbcx\oauth\server\clientAssertionType;
 
-use nAuth\storage\ClientCredentialsInterface;
-use nAuth\RequestInterface;
-use nAuth\ResponseInterface;
+use nbcx\oauth\server\storage\ClientCredentialsInterface;
+use nbcx\oauth\server\RequestInterface;
+use nbcx\oauth\server\ResponseInterface;
 
 /**
  * Validate a client via Http Basic authentication

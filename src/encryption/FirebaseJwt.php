@@ -1,10 +1,6 @@
 <?php
-namespace nAuth\encryption;
+namespace nbcx\oauth\server\encryption;
 
-/**
- * Bridge file to use the firebase/php-jwt package for JWT encoding and decoding.
- * @author Francis Chuang <francis.chuang@gmail.com>
- */
 class FirebaseJwt implements EncryptionInterface {
 
     public function __construct() {

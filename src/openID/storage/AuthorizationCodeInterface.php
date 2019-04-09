@@ -1,14 +1,12 @@
 <?php
-namespace nAuth\openID\Storage;
+namespace nbcx\oauth\server\openID\Storage;
 
-use nAuth\storage\AuthorizationCodeInterface as BaseAuthorizationCodeInterface;
+use nbcx\oauth\server\storage\AuthorizationCodeInterface as BaseAuthorizationCodeInterface;
 
 /**
  * Implement this interface to specify where the OAuth2 Server
  * should get/save authorization codes for the "Authorization Code"
  * grant type
- *
- * @author Brent Shaffer <bshafs at gmail dot com>
  */
 interface AuthorizationCodeInterface extends BaseAuthorizationCodeInterface {
 

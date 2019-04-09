@@ -1,8 +1,8 @@
 <?php
-namespace nAuth\clientAssertionType;
+namespace nbcx\oauth\server\clientAssertionType;
 
-use nAuth\RequestInterface;
-use nAuth\ResponseInterface;
+use nbcx\oauth\server\RequestInterface;
+use nbcx\oauth\server\ResponseInterface;
 
 /**
  * Interface for all OAuth2 Client Assertion Types

@@ -1,24 +1,16 @@
 <?php
-namespace nAuth\grantType;
+namespace nbcx\oauth\server\grantType;
 
-use nAuth\clientAssertionType\ClientAssertionTypeInterface;
-use nAuth\storage\JwtBearerInterface;
-use nAuth\encryption\Jwt;
-use nAuth\encryption\EncryptionInterface;
-use nAuth\responseType\AccessTokenInterface;
-use nAuth\RequestInterface;
-use nAuth\ResponseInterface;
+use nbcx\oauth\server\clientAssertionType\ClientAssertionTypeInterface;
+use nbcx\oauth\server\storage\JwtBearerInterface;
+use nbcx\oauth\server\encryption\Jwt;
+use nbcx\oauth\server\encryption\EncryptionInterface;
+use nbcx\oauth\server\responseType\AccessTokenInterface;
+use nbcx\oauth\server\RequestInterface;
+use nbcx\oauth\server\ResponseInterface;
 
-/**
- * The JWT bearer authorization grant implements JWT (JSON Web Tokens) as a grant type per the IETF draft.
- *
- * @see http://tools.ietf.org/html/draft-ietf-oauth-jwt-bearer-04#section-4
- *
- * @author F21
- * @author Brent Shaffer <bshafs at gmail dot com>
- */
-class JwtBearer implements GrantTypeInterface, ClientAssertionTypeInterface
-{
+class JwtBearer implements GrantTypeInterface, ClientAssertionTypeInterface {
+
     private $jwt;
 
     protected $storage;
@@ -34,8 +26,7 @@ class JwtBearer implements GrantTypeInterface, ClientAssertionTypeInterface
      * @param EncryptionInterface|OAuth2\Encryption\JWT $jwtUtil OPTONAL The class used to decode, encode and verify JWTs.
      * @param array $config
      */
-    public function __construct(JwtBearerInterface $storage, $audience, EncryptionInterface $jwtUtil = null, array $config = [])
-    {
+    public function __construct(JwtBearerInterface $storage, $audience, EncryptionInterface $jwtUtil = null, array $config = []) {
         $this->storage = $storage;
         $this->audience = $audience;
 
@@ -60,8 +51,7 @@ class JwtBearer implements GrantTypeInterface, ClientAssertionTypeInterface
      *
      * @see OAuth2\GrantType\GrantTypeInterface::getQuerystringIdentifier()
      */
-    public function getQuerystringIdentifier()
-    {
+    public function getQuerystringIdentifier() {
         return 'urn:ietf:params:oauth:grant-type:jwt-bearer';
     }
 
@@ -73,8 +63,7 @@ class JwtBearer implements GrantTypeInterface, ClientAssertionTypeInterface
      *
      * @see OAuth2\GrantType\GrantTypeInterface::getTokenData()
      */
-    public function validateRequest(RequestInterface $request, ResponseInterface $response)
-    {
+    public function validateRequest(RequestInterface $request, ResponseInterface $response) {
         if (!$request->request("assertion")) {
             $response->setError(400, 'invalid_request', 'Missing parameters: "assertion" required');
 
@@ -132,7 +121,8 @@ class JwtBearer implements GrantTypeInterface, ClientAssertionTypeInterface
 
                 return null;
             }
-        } else {
+        }
+        else {
             $response->setError(400, 'invalid_grant', "Expiration (exp) time must be a unix time stamp");
 
             return null;
@@ -146,7 +136,8 @@ class JwtBearer implements GrantTypeInterface, ClientAssertionTypeInterface
 
                     return null;
                 }
-            } else {
+            }
+            else {
                 $response->setError(400, 'invalid_grant', "Not Before (nbf) time must be a unix time stamp");
 
                 return null;
@@ -170,7 +161,8 @@ class JwtBearer implements GrantTypeInterface, ClientAssertionTypeInterface
                 $response->setError(400, 'invalid_grant', "JSON Token Identifier (jti) has already been used");
 
                 return null;
-            } else {
+            }
+            else {
                 $this->storage->setJti($jwt['iss'], $jwt['sub'], $jwt['aud'], $jwt['exp'], $jwt['jti']);
             }
         }
@@ -195,18 +187,15 @@ class JwtBearer implements GrantTypeInterface, ClientAssertionTypeInterface
         return true;
     }
 
-    public function getClientId()
-    {
+    public function getClientId() {
         return $this->jwt['iss'];
     }
 
-    public function getUserId()
-    {
+    public function getUserId() {
         return $this->jwt['sub'];
     }
 
-    public function getScope()
-    {
+    public function getScope() {
         return null;
     }
 
@@ -216,8 +205,7 @@ class JwtBearer implements GrantTypeInterface, ClientAssertionTypeInterface
      *
      * @see OAuth2\GrantType\GrantTypeInterface::createAccessToken()
      */
-    public function createAccessToken(AccessTokenInterface $accessToken, $client_id, $user_id, $scope)
-    {
+    public function createAccessToken(AccessTokenInterface $accessToken, $client_id, $user_id, $scope) {
         $includeRefreshToken = false;
 
         return $accessToken->createAccessToken($client_id, $user_id, $scope, $includeRefreshToken);

@@ -1,12 +1,10 @@
 <?php
-namespace nAuth\storage;
+namespace nbcx\oauth\server\storage;
 
 /**
  * Implement this interface to specify where the OAuth2 Server
  * should get/save refresh tokens for the "Refresh Token"
  * grant type
- *
- * @author Brent Shaffer <bshafs at gmail dot com>
  */
 interface RefreshTokenInterface {
     /**

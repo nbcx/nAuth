@@ -1,11 +1,9 @@
 <?php
-namespace nAuth\storage;
+namespace nbcx\oauth\server\storage;
 
 /**
  * Implement this interface to specify where the OAuth2 Server
  * should retrieve client information
- *
- * @author Brent Shaffer <bshafs at gmail dot com>
  */
 interface ClientInterface {
     /**

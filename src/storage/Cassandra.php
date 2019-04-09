@@ -1,12 +1,11 @@
 <?php
-
-namespace nAuth\storage;
+namespace nbcx\oauth\server\storage;
 
 use phpcassa\ColumnFamily;
 use phpcassa\ColumnSlice;
 use phpcassa\Connection\ConnectionPool;
-use OAuth2\OpenID\Storage\UserClaimsInterface;
-use OAuth2\OpenID\Storage\AuthorizationCodeInterface as OpenIDAuthorizationCodeInterface;
+use nbcx\oauth\server\openID\storage\UserClaimsInterface;
+use nbcx\oauth\server\OpenID\storage\AuthorizationCodeInterface as OpenIDAuthorizationCodeInterface;
 
 /**
  * Cassandra storage for all storage types

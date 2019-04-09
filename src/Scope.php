@@ -1,8 +1,8 @@
 <?php
-namespace nAuth;
+namespace nbcx\oauth\server;
 
-use nAuth\storage\Memory;
-use nAuth\storage\ScopeInterface as ScopeStorageInterface;
+use nbcx\oauth\server\storage\Memory;
+use nbcx\oauth\server\storage\ScopeInterface as ScopeStorageInterface;
 
 class Scope implements ScopeInterface {
 

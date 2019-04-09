@@ -1,11 +1,9 @@
 <?php
-namespace nAuth\storage;
+namespace nbcx\oauth\server\storage;
 
 /**
  * Implement this interface to specify how the OAuth2 Server
  * should verify client credentials
- *
- * @author Brent Shaffer <bshafs at gmail dot com>
  */
 interface ClientCredentialsInterface extends ClientInterface {
 

@@ -1,14 +1,9 @@
 <?php
+namespace nbcx\oauth\server\responseType;
 
-namespace nAuth\responseType;
+use nbcx\oauth\server\storage\AccessTokenInterface as AccessTokenStorageInterface;
+use nbcx\oauth\server\storage\RefreshTokenInterface;
 
-use nAuth\storage\AccessTokenInterface as AccessTokenStorageInterface;
-use nAuth\storage\RefreshTokenInterface;
-
-/**
- *
- * @author Brent Shaffer <bshafs at gmail dot com>
- */
 class AccessToken implements AccessTokenInterface {
 
     protected $tokenStorage;
@@ -16,8 +11,8 @@ class AccessToken implements AccessTokenInterface {
     protected $config;
 
     /**
-     * @param OAuth2\Storage\AccessTokenInterface $tokenStorage REQUIRED Storage class for saving access token information
-     * @param OAuth2\Storage\RefreshTokenInterface $refreshStorage OPTIONAL Storage class for saving refresh token information
+     * @param \nbcx\oauth\server\storage\AccessTokenInterface $tokenStorage REQUIRED Storage class for saving access token information
+     * @param \nbcx\oauth\server\storage\RefreshTokenInterface $refreshStorage OPTIONAL Storage class for saving refresh token information
      * @param array $config OPTIONAL Configuration options for the server
      *                                                             <code>
      *                                                             $config = array(

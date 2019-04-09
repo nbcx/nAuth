@@ -1,12 +1,10 @@
 <?php
-namespace nAuth\storage;
+namespace nbcx\oauth\server\storage;
 
 /**
  * Implement this interface to specify where the OAuth2 Server
  * should retrieve user credentials for the
  * "Resource Owner Password Credentials" grant type
- *
- * @author Brent Shaffer <bshafs at gmail dot com>
  */
 interface UserCredentialsInterface {
     /**

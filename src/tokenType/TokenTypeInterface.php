@@ -1,8 +1,8 @@
 <?php
-namespace nAuth\TokenType;
+namespace nbcx\oauth\server\TokenType;
 
-use nAuth\RequestInterface;
-use nAuth\ResponseInterface;
+use nbcx\oauth\server\RequestInterface;
+use nbcx\oauth\server\ResponseInterface;
 
 interface TokenTypeInterface {
     /**

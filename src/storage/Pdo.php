@@ -1,21 +1,9 @@
 <?php
-namespace nAuth\storage;
+namespace nbcx\oauth\server\storage;
 
-use nAuth\openID\storage\UserClaimsInterface;
-use nAuth\openID\storage\AuthorizationCodeInterface as OpenIDAuthorizationCodeInterface;
+use nbcx\oauth\server\openID\storage\UserClaimsInterface;
+use nbcx\oauth\server\openID\storage\AuthorizationCodeInterface as OpenIDAuthorizationCodeInterface;
 
-/**
- * Simple PDO storage for all storage types
- *
- * NOTE: This class is meant to get users started
- * quickly. If your application requires further
- * customization, extend this class or create your own.
- *
- * NOTE: Passwords are stored in plaintext, which is never
- * a good idea.  Be sure to override this for your application
- *
- * @author Brent Shaffer <bshafs at gmail dot com>
- */
 class Pdo implements
     AuthorizationCodeInterface,
     AccessTokenInterface,

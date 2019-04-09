@@ -1,10 +1,10 @@
 <?php
-namespace nAuth\OpenID\ResponseType;
+namespace nbcx\oauth\server\openID\ResponseType;
 
-use nAuth\encryption\EncryptionInterface;
-use nAuth\encryption\Jwt;
-use nAuth\storage\PublicKeyInterface;
-use nAuth\openID\storage\UserClaimsInterface;
+use nbcx\oauth\server\encryption\EncryptionInterface;
+use nbcx\oauth\server\encryption\Jwt;
+use nbcx\oauth\server\storage\PublicKeyInterface;
+use nbcx\oauth\server\openID\storage\UserClaimsInterface;
 
 class IdToken implements IdTokenInterface {
 

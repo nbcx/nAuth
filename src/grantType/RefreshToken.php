@@ -1,15 +1,11 @@
 <?php
-namespace nAuth\grantType;
+namespace nbcx\oauth\server\grantType;
 
-use nAuth\storage\RefreshTokenInterface;
-use nAuth\responseType\AccessTokenInterface;
-use nAuth\RequestInterface;
-use nAuth\ResponseInterface;
+use nbcx\oauth\server\storage\RefreshTokenInterface;
+use nbcx\oauth\server\responseType\AccessTokenInterface;
+use nbcx\oauth\server\RequestInterface;
+use nbcx\oauth\server\ResponseInterface;
 
-/**
- *
- * @author Brent Shaffer <bshafs at gmail dot com>
- */
 class RefreshToken implements GrantTypeInterface {
 
     private $refreshToken;
@@ -18,7 +14,7 @@ class RefreshToken implements GrantTypeInterface {
     protected $config;
 
     /**
-     * @param OAuth2\Storage\RefreshTokenInterface $storage REQUIRED Storage class for retrieving refresh token information
+     * @param \nbcx\oauth\server\storage\refreshTokenInterface $storage REQUIRED Storage class for retrieving refresh token information
      * @param array $config OPTIONAL Configuration options for the server
      * <code>
      * $config = array(

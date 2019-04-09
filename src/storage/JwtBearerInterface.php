@@ -1,5 +1,5 @@
 <?php
-namespace nAuth\storage;
+namespace nbcx\oauth\server\storage;
 
 /**
  * Implement this interface to specify where the OAuth2 Server
@@ -7,9 +7,6 @@ namespace nAuth\storage;
  *
  * @TODO consider extending ClientInterface, as this will almost always
  * be the same storage as retrieving clientData
- *
- * @author F21
- * @author Brent Shaffer <bshafs at gmail dot com>
  */
 interface JwtBearerInterface {
     /**

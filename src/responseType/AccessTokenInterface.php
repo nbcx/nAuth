@@ -1,10 +1,6 @@
 <?php
-namespace nAuth\responseType;
+namespace nbcx\oauth\server\responseType;
 
-/**
- *
- * @author Brent Shaffer <bshafs at gmail dot com>
- */
 interface AccessTokenInterface extends ResponseTypeInterface {
     /**
      * Handle the creation of access token, also issue refresh token if supported / desirable.

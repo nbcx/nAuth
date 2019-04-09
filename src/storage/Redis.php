@@ -1,7 +1,7 @@
 <?php
-namespace nAuth\storage;
+namespace nbcx\oauth\server\storage;
 
-use nAuth\openID\storage\authorizationCodeInterface as OpenIDAuthorizationCodeInterface;
+use nbcx\oauth\server\openID\storage\authorizationCodeInterface as OpenIDAuthorizationCodeInterface;
 
 /**
  * redis storage for all storage types

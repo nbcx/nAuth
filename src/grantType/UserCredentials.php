@@ -1,15 +1,11 @@
 <?php
-namespace nAuth\grantType;
+namespace nbcx\oauth\server\grantType;
 
-use nAuth\storage\UserCredentialsInterface;
-use nAuth\responseType\AccessTokenInterface;
-use nAuth\RequestInterface;
-use nAuth\ResponseInterface;
+use nbcx\oauth\server\storage\UserCredentialsInterface;
+use nbcx\oauth\server\responseType\AccessTokenInterface;
+use nbcx\oauth\server\RequestInterface;
+use nbcx\oauth\server\ResponseInterface;
 
-/**
- *
- * @author Brent Shaffer <bshafs at gmail dot com>
- */
 class UserCredentials implements GrantTypeInterface {
 
     private $userInfo;
@@ -17,7 +13,7 @@ class UserCredentials implements GrantTypeInterface {
     protected $storage;
 
     /**
-     * @param nAuth\storage\UserCredentialsInterface $storage REQUIRED Storage class for retrieving user credentials information
+     * @param nbcx\oauth\server\storage\UserCredentialsInterface $storage REQUIRED Storage class for retrieving user credentials information
      */
     public function __construct(UserCredentialsInterface $storage) {
         $this->storage = $storage;

@@ -1,8 +1,8 @@
 <?php
-namespace nAuth\tokenType;
+namespace nbcx\oauth\server\tokenType;
 
-use nAuth\RequestInterface;
-use nAuth\ResponseInterface;
+use nbcx\oauth\server\RequestInterface;
+use nbcx\oauth\server\ResponseInterface;
 
 /**
  * This is not yet supported!

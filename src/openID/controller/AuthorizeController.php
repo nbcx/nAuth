@@ -1,9 +1,9 @@
 <?php
-namespace nAuth\openID\Controller;
+namespace nbcx\oauth\server\openID\Controller;
 
-use nAuth\controller\AuthorizeController as BaseAuthorizeController;
-use nAuth\RequestInterface;
-use nAuth\ResponseInterface;
+use nbcx\oauth\server\controller\AuthorizeController as BaseAuthorizeController;
+use nbcx\oauth\server\RequestInterface;
+use nbcx\oauth\server\ResponseInterface;
 
 /**
  * @see OAuth2\Controller\AuthorizeControllerInterface

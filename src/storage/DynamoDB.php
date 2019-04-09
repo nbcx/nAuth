@@ -1,11 +1,11 @@
 <?php
 
-namespace nAuth\storage;
+namespace nbcx\oauth\server\storage;
 
 use Aws\DynamoDb\DynamoDbClient;
 
-use nAuth\openID\storage\UserClaimsInterface;
-use nAuth\openID\storage\AuthorizationCodeInterface as OpenIDAuthorizationCodeInterface;
+use nbcx\oauth\server\openID\storage\UserClaimsInterface;
+use nbcx\oauth\server\openID\storage\AuthorizationCodeInterface as OpenIDAuthorizationCodeInterface;
 
 /**
  * DynamoDB storage for all storage types

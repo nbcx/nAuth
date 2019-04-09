@@ -1,13 +1,9 @@
 <?php
-namespace nAuth\openID\GrantType;
+namespace nbcx\oauth\server\openID\GrantType;
 
-use nAuth\grantType\AuthorizationCode as BaseAuthorizationCode;
-use nAuth\responseType\AccessTokenInterface;
+use nbcx\oauth\server\grantType\AuthorizationCode as BaseAuthorizationCode;
+use nbcx\oauth\server\responseType\AccessTokenInterface;
 
-/**
- *
- * @author Brent Shaffer <bshafs at gmail dot com>
- */
 class AuthorizationCode extends BaseAuthorizationCode {
 
     public function createAccessToken(AccessTokenInterface $accessToken, $client_id, $user_id, $scope) {

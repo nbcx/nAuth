@@ -1,11 +1,8 @@
 <?php
-namespace nAuth\responseType;
+namespace nbcx\oauth\server\responseType;
 
-/**
- *
- * @author Brent Shaffer <bshafs at gmail dot com>
- */
 interface AuthorizationCodeInterface extends ResponseTypeInterface {
+
     /**
      * @return
      * TRUE if the grant type requires a redirect_uri, FALSE if not

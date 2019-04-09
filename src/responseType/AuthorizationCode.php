@@ -1,13 +1,8 @@
 <?php
+namespace nbcx\oauth\server\responseType;
 
-namespace nAuth\responseType;
+use nbcx\oauth\server\storage\AuthorizationCodeInterface as AuthorizationCodeStorageInterface;
 
-use nAuth\storage\AuthorizationCodeInterface as AuthorizationCodeStorageInterface;
-
-/**
- *
- * @author Brent Shaffer <bshafs at gmail dot com>
- */
 class AuthorizationCode implements AuthorizationCodeInterface {
 
     protected $storage;

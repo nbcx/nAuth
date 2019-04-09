@@ -1,5 +1,5 @@
 <?php
-namespace nAuth\openID\Storage;
+namespace nbcx\oauth\server\openID\Storage;
 
 /**
  * Implement this interface to specify where the OAuth2 Server

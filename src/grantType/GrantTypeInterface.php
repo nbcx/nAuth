@@ -1,10 +1,10 @@
 <?php
 
-namespace nAuth\grantType;
+namespace nbcx\oauth\server\grantType;
 
-use nAuth\responseType\AccessTokenInterface;
-use nAuth\RequestInterface;
-use nAuth\ResponseInterface;
+use nbcx\oauth\server\responseType\AccessTokenInterface;
+use nbcx\oauth\server\RequestInterface;
+use nbcx\oauth\server\ResponseInterface;
 
 /**
  * Interface for all OAuth2 Grant Types

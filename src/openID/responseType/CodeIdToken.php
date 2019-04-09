@@ -1,5 +1,5 @@
 <?php
-namespace nAuth\openID\ResponseType;
+namespace nbcx\oauth\server\openID\ResponseType;
 
 class CodeIdToken implements CodeIdTokenInterface {
 

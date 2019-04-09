@@ -1,44 +1,44 @@
 <?php
-namespace nAuth;
+namespace nbcx\oauth\server;
 
-use nAuth\controller\ResourceControllerInterface;
-use nAuth\controller\ResourceController;
-use nAuth\openID\controller\UserInfoControllerInterface;
-use nAuth\openID\controller\UserInfoController;
-use nAuth\openID\controller\AuthorizeController as OpenIDAuthorizeController;
-use nAuth\openID\responseType\AuthorizationCode as OpenIDAuthorizationCodeResponseType;
-use nAuth\openID\storage\AuthorizationCodeInterface as OpenIDAuthorizationCodeInterface;
-use nAuth\openID\grantType\AuthorizationCode as OpenIDAuthorizationCodeGrantType;
-use nAuth\controller\AuthorizeControllerInterface;
-use nAuth\controller\AuthorizeController;
-use nAuth\controller\TokenControllerInterface;
-use nAuth\controller\TokenController;
-use nAuth\clientAssertionType\ClientAssertionTypeInterface;
-use nAuth\clientAssertionType\HttpBasic;
-use nAuth\responseType\ResponseTypeInterface;
-use nAuth\responseType\AuthorizationCode as AuthorizationCodeResponseType;
-use nAuth\responseType\AccessToken;
-use nAuth\responseType\JwtAccessToken;
-use nAuth\openID\ResponseType\CodeIdToken;
-use nAuth\openID\ResponseType\IdToken;
-use nAuth\openID\ResponseType\IdTokenToken;
-use nAuth\tokenType\TokenTypeInterface;
-use nAuth\tokenType\Bearer;
-use nAuth\grantType\GrantTypeInterface;
-use nAuth\grantType\UserCredentials;
-use nAuth\grantType\ClientCredentials;
-use nAuth\grantType\RefreshToken;
-use nAuth\grantType\AuthorizationCode;
-use nAuth\dtorage\JwtAccessToken as JwtAccessTokenStorage;
-use nAuth\dtorage\JwtAccessTokenInterface;
+use nbcx\oauth\server\controller\ResourceControllerInterface;
+use nbcx\oauth\server\controller\ResourceController;
+use nbcx\oauth\server\openID\controller\UserInfoControllerInterface;
+use nbcx\oauth\server\openID\controller\UserInfoController;
+use nbcx\oauth\server\openID\controller\AuthorizeController as OpenIDAuthorizeController;
+use nbcx\oauth\server\openID\responseType\AuthorizationCode as OpenIDAuthorizationCodeResponseType;
+use nbcx\oauth\server\openID\storage\AuthorizationCodeInterface as OpenIDAuthorizationCodeInterface;
+use nbcx\oauth\server\openID\grantType\AuthorizationCode as OpenIDAuthorizationCodeGrantType;
+use nbcx\oauth\server\controller\AuthorizeControllerInterface;
+use nbcx\oauth\server\controller\AuthorizeController;
+use nbcx\oauth\server\controller\TokenControllerInterface;
+use nbcx\oauth\server\controller\TokenController;
+use nbcx\oauth\server\clientAssertionType\ClientAssertionTypeInterface;
+use nbcx\oauth\server\clientAssertionType\HttpBasic;
+use nbcx\oauth\server\responseType\ResponseTypeInterface;
+use nbcx\oauth\server\responseType\AuthorizationCode as AuthorizationCodeResponseType;
+use nbcx\oauth\server\responseType\AccessToken;
+use nbcx\oauth\server\responseType\JwtAccessToken;
+use nbcx\oauth\server\openID\ResponseType\CodeIdToken;
+use nbcx\oauth\server\openID\ResponseType\IdToken;
+use nbcx\oauth\server\openID\ResponseType\IdTokenToken;
+use nbcx\oauth\server\tokenType\TokenTypeInterface;
+use nbcx\oauth\server\tokenType\Bearer;
+use nbcx\oauth\server\grantType\GrantTypeInterface;
+use nbcx\oauth\server\grantType\UserCredentials;
+use nbcx\oauth\server\grantType\ClientCredentials;
+use nbcx\oauth\server\grantType\RefreshToken;
+use nbcx\oauth\server\grantType\AuthorizationCode;
+use nbcx\oauth\server\dtorage\JwtAccessToken as JwtAccessTokenStorage;
+use nbcx\oauth\server\dtorage\JwtAccessTokenInterface;
 
 /**
  * Server class for OAuth2
  * This class serves as a convience class which wraps the other Controller classes
  *
- * @see \nAuth\controller\ResourceController
- * @see \nAuth\controller\AuthorizeController
- * @see \nAuth\controller\TokenController
+ * @see \nbcx\oauth\server\controller\ResourceController
+ * @see \nbcx\oauth\server\controller\AuthorizeController
+ * @see \nbcx\oauth\server\controller\TokenController
  */
 class Server implements ResourceControllerInterface, AuthorizeControllerInterface, TokenControllerInterface, UserInfoControllerInterface {
 
@@ -61,24 +61,24 @@ class Server implements ResourceControllerInterface, AuthorizeControllerInterfac
     protected $clientAssertionType;
 
     protected $storageMap = [
-        'access_token' => 'nAuth\storage\AccessTokenInterface',
-        'authorization_code' => 'nAuth\storage\AuthorizationCodeInterface',
-        'client_credentials' => 'nAuth\storage\ClientCredentialsInterface',
-        'client' => 'nAuth\storage\ClientInterface',
-        'refresh_token' => 'nAuth\storage\RefreshTokenInterface',
-        'user_credentials' => 'nAuth\storage\UserCredentialsInterface',
-        'user_claims' => 'nAuth\openID\storage\UserClaimsInterface',
-        'public_key' => 'nAuth\storage\PublicKeyInterface',
-        'jwt_bearer' => 'nAuth\storage\JWTBearerInterface',
-        'scope' => 'nAuth\storage\ScopeInterface',
+        'access_token' => 'nbcx\oauth\server\storage\AccessTokenInterface',
+        'authorization_code' => 'nbcx\oauth\server\storage\AuthorizationCodeInterface',
+        'client_credentials' => 'nbcx\oauth\server\storage\ClientCredentialsInterface',
+        'client' => 'nbcx\oauth\server\storage\ClientInterface',
+        'refresh_token' => 'nbcx\oauth\server\storage\RefreshTokenInterface',
+        'user_credentials' => 'nbcx\oauth\server\storage\UserCredentialsInterface',
+        'user_claims' => 'nbcx\oauth\server\openID\storage\UserClaimsInterface',
+        'public_key' => 'nbcx\oauth\server\storage\PublicKeyInterface',
+        'jwt_bearer' => 'nbcx\oauth\server\storage\JWTBearerInterface',
+        'scope' => 'nbcx\oauth\server\storage\ScopeInterface',
     ];
 
     protected $responseTypeMap = [
-        'token' => 'nAuth\responseType\AccessTokenInterface',
-        'code' => 'nAuth\responseType\AuthorizationCodeInterface',
-        'id_token' => 'nAuth\openID\responseType\IdTokenInterface',
-        'id_token token' => 'nAuth\openID\responseType\IdTokenTokenInterface',
-        'code id_token' => 'nAuth\openID\responseType\CodeIdTokenInterface',
+        'token' => 'nbcx\oauth\server\responseType\AccessTokenInterface',
+        'code' => 'nbcx\oauth\server\responseType\AuthorizationCodeInterface',
+        'id_token' => 'nbcx\oauth\server\openID\responseType\IdTokenInterface',
+        'id_token token' => 'nbcx\oauth\server\openID\responseType\IdTokenTokenInterface',
+        'code id_token' => 'nbcx\oauth\server\openID\responseType\CodeIdTokenInterface',
     ];
 
     /**

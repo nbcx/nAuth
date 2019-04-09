@@ -1,22 +1,18 @@
 <?php
-namespace nAuth\grantType;
+namespace nbcx\oauth\server\grantType;
 
-use nAuth\storage\AuthorizationCodeInterface;
-use nAuth\responseType\AccessTokenInterface;
-use nAuth\RequestInterface;
-use nAuth\ResponseInterface;
+use nbcx\oauth\server\storage\AuthorizationCodeInterface;
+use nbcx\oauth\server\responseType\AccessTokenInterface;
+use nbcx\oauth\server\RequestInterface;
+use nbcx\oauth\server\ResponseInterface;
 
-/**
- *
- * @author Brent Shaffer <bshafs at gmail dot com>
- */
 class AuthorizationCode implements GrantTypeInterface {
 
     protected $storage;
     protected $authCode;
 
     /**
-     * @param OAuth2\Storage\AuthorizationCodeInterface $storage REQUIRED Storage class for retrieving authorization code information
+     * @param \nbcx\oauth\server\storage\AuthorizationCodeInterface $storage REQUIRED Storage class for retrieving authorization code information
      */
     public function __construct(AuthorizationCodeInterface $storage) {
         $this->storage = $storage;

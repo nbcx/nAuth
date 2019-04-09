@@ -1,17 +1,17 @@
 <?php
-namespace nAuth\openID\Controller;
+namespace nbcx\oauth\server\openID\Controller;
 
-use nAuth\Scope;
-use nAuth\tokenType\TokenTypeInterface;
-use nAuth\storage\AccessTokenInterface;
-use nAuth\openID\Storage\UserClaimsInterface;
-use nAuth\controller\ResourceController;
-use nAuth\scopeInterface;
-use nAuth\RequestInterface;
-use nAuth\ResponseInterface;
+use nbcx\oauth\server\Scope;
+use nbcx\oauth\server\tokenType\TokenTypeInterface;
+use nbcx\oauth\server\storage\AccessTokenInterface;
+use nbcx\oauth\server\openID\Storage\UserClaimsInterface;
+use nbcx\oauth\server\controller\ResourceController;
+use nbcx\oauth\server\scopeInterface;
+use nbcx\oauth\server\RequestInterface;
+use nbcx\oauth\server\ResponseInterface;
 
 /**
- * @see OAuth2\Controller\UserInfoControllerInterface
+ * @see \nbcx\oauth\server\controller\UserInfoControllerInterface
  */
 class UserInfoController extends ResourceController implements UserInfoControllerInterface {
     private $token;

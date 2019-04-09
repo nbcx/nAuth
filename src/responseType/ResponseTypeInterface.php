@@ -1,5 +1,5 @@
 <?php
-namespace nAuth\ResponseType;
+namespace nbcx\oauth\server\ResponseType;
 
 interface ResponseTypeInterface {
 

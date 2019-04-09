@@ -1,13 +1,9 @@
 <?php
-namespace nAuth\openID\ResponseType;
+namespace nbcx\oauth\server\openID\ResponseType;
 
-use nAuth\responseType\AuthorizationCode as BaseAuthorizationCode;
-use nAuth\openID\storage\AuthorizationCodeInterface as AuthorizationCodeStorageInterface;
+use nbcx\oauth\server\responseType\AuthorizationCode as BaseAuthorizationCode;
+use nbcx\oauth\server\openID\storage\AuthorizationCodeInterface as AuthorizationCodeStorageInterface;
 
-/**
- *
- * @author Brent Shaffer <bshafs at gmail dot com>
- */
 class AuthorizationCode extends BaseAuthorizationCode implements AuthorizationCodeInterface {
 
     public function __construct(AuthorizationCodeStorageInterface $storage, array $config = []) {

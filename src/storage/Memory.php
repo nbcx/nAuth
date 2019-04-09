@@ -1,16 +1,14 @@
 <?php
-namespace nAuth\storage;
+namespace nbcx\oauth\server\storage;
 
-use nAuth\openID\storage\UserClaimsInterface;
-use nAuth\openID\storage\AuthorizationCodeInterface as OpenIDAuthorizationCodeInterface;
+use nbcx\oauth\server\openID\storage\UserClaimsInterface;
+use nbcx\oauth\server\openID\storage\AuthorizationCodeInterface as OpenIDAuthorizationCodeInterface;
 
 /**
  * Simple in-memory storage for all storage types
  *
  * NOTE: This class should never be used in production, and is
  * a stub class for example use only
- *
- * @author Brent Shaffer <bshafs at gmail dot com>
  */
 class Memory implements AuthorizationCodeInterface,
     UserCredentialsInterface,

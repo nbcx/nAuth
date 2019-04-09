@@ -1,14 +1,14 @@
 <?php
-namespace nAuth\grantType;
+namespace nbcx\oauth\server\grantType;
 
-use nAuth\clientAssertionType\HttpBasic;
-use nAuth\responseType\AccessTokenInterface;
-use nAuth\storage\ClientCredentialsInterface;
+use nbcx\oauth\server\clientAssertionType\HttpBasic;
+use nbcx\oauth\server\responseType\AccessTokenInterface;
+use nbcx\oauth\server\storage\ClientCredentialsInterface;
 
 /**
  * @author Brent Shaffer <bshafs at gmail dot com>
  *
- * @see nAuth\ClientAssertionType_HttpBasic
+ * @see \nbcx\oauth\server\ClientAssertionType_HttpBasic
  */
 class ClientCredentials extends HttpBasic implements GrantTypeInterface {
 

@@ -1,13 +1,12 @@
 <?php
+namespace nbcx\oauth\server\responseType;
 
-namespace nAuth\responseType;
-
-use nAuth\encryption\EncryptionInterface;
-use nAuth\encryption\Jwt;
-use nAuth\storage\AccessTokenInterface as AccessTokenStorageInterface;
-use nAuth\storage\RefreshTokenInterface;
-use nAuth\storage\PublicKeyInterface;
-use nAuth\storage\Memory;
+use nbcx\oauth\server\encryption\EncryptionInterface;
+use nbcx\oauth\server\encryption\Jwt;
+use nbcx\oauth\server\storage\AccessTokenInterface as AccessTokenStorageInterface;
+use nbcx\oauth\server\storage\RefreshTokenInterface;
+use nbcx\oauth\server\storage\PublicKeyInterface;
+use nbcx\oauth\server\storage\Memory;
 
 /**
  *

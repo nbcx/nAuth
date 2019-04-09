@@ -1,19 +1,8 @@
 <?php
+namespace nbcx\oauth\server\storage;
 
-namespace nAuth\storage;
+use nbcx\oauth\server\openID\storage\AuthorizationCodeInterface as OpenIDAuthorizationCodeInterface;
 
-use nAuth\openID\storage\AuthorizationCodeInterface as OpenIDAuthorizationCodeInterface;
-
-/**
- * Simple Couchbase storage for all storage types
- *
- * This class should be extended or overridden as required
- *
- * NOTE: Passwords are stored in plaintext, which is never
- * a good idea.  Be sure to override this for your application
- *
- * @author Tom Park <tom@raucter.com>
- */
 class CouchbaseDB implements AuthorizationCodeInterface,
     AccessTokenInterface,
     ClientCredentialsInterface,

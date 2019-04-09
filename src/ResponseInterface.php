@@ -1,5 +1,5 @@
 <?php
-namespace nAuth;
+namespace nbcx\oauth\server;
 
 /**
  * Interface which represents an object response.  Meant to handle and display the proper OAuth2 Responses

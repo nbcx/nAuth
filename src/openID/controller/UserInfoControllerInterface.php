@@ -1,8 +1,8 @@
 <?php
-namespace nAuth\OpenID\Controller;
+namespace nbcx\oauth\server\OpenID\Controller;
 
-use nAuth\RequestInterface;
-use nAuth\ResponseInterface;
+use nbcx\oauth\server\RequestInterface;
+use nbcx\oauth\server\ResponseInterface;
 
 /**
  *  This controller is called when the user claims for OpenID Connect's

@@ -1,12 +1,8 @@
 <?php
-namespace nAuth\OpenID\ResponseType;
+namespace nbcx\oauth\server\OpenID\ResponseType;
 
-use nAuth\responseType\AuthorizationCodeInterface as BaseAuthorizationCodeInterface;
+use nbcx\oauth\server\responseType\AuthorizationCodeInterface as BaseAuthorizationCodeInterface;
 
-/**
- *
- * @author Brent Shaffer <bshafs at gmail dot com>
- */
 interface AuthorizationCodeInterface extends BaseAuthorizationCodeInterface {
     /**
      * Handle the creation of the authorization code.

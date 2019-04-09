@@ -1,13 +1,9 @@
 <?php
-namespace nAuth\storage;
+namespace nbcx\oauth\server\storage;
 
-use nAuth\encryption\EncryptionInterface;
-use nAuth\encryption\Jwt;
+use nbcx\oauth\server\encryption\EncryptionInterface;
+use nbcx\oauth\server\encryption\Jwt;
 
-/**
- *
- * @author Brent Shaffer <bshafs at gmail dot com>
- */
 class JwtAccessToken implements JwtAccessTokenInterface {
 
     protected $publicKeyStorage;
@@ -15,11 +11,11 @@ class JwtAccessToken implements JwtAccessTokenInterface {
     protected $encryptionUtil;
 
     /**
-     * @param OAuth2\Encryption\PublicKeyInterface $publicKeyStorage the public key encryption to use
-     * @param OAuth2\Storage\AccessTokenInterface $tokenStorage OPTIONAL persist the access token to another storage. This is useful if
+     * @param nbcx\oauth\server\encryption\PublicKeyInterface $publicKeyStorage the public key encryption to use
+     * @param nbcx\oauth\server\storage\AccessTokenInterface $tokenStorage OPTIONAL persist the access token to another storage. This is useful if
      *                                                                you want to retain access token grant information somewhere, but
      *                                                                is not necessary when using this grant type.
-     * @param OAuth2\Encryption\EncryptionInterface $encryptionUtil OPTIONAL class to use for "encode" and "decode" functions.
+     * @param nbcx\oauth\server\encryption\EncryptionInterface $encryptionUtil OPTIONAL class to use for "encode" and "decode" functions.
      */
     public function __construct(PublicKeyInterface $publicKeyStorage, AccessTokenInterface $tokenStorage = null, EncryptionInterface $encryptionUtil = null) {
         $this->publicKeyStorage = $publicKeyStorage;

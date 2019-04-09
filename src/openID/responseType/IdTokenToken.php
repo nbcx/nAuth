@@ -1,7 +1,7 @@
 <?php
-namespace nAuth\openID\ResponseType;
+namespace nbcx\oauth\server\openID\ResponseType;
 
-use nAuth\responseType\AccessTokenInterface;
+use nbcx\oauth\server\responseType\AccessTokenInterface;
 
 class IdTokenToken implements IdTokenTokenInterface {
 

@@ -1,5 +1,5 @@
 <?php
-namespace nAuth\encryption;
+namespace nbcx\oauth\server\encryption;
 
 interface EncryptionInterface {
 

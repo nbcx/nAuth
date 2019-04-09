@@ -1,5 +1,5 @@
 <?php
-namespace nAuth;
+namespace nbcx\oauth\server;
 
 use LogicException;
 

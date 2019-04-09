@@ -1,8 +1,7 @@
 <?php
+namespace nbcx\oauth\server\storage;
 
-namespace nAuth\storage;
-
-use nAuth\openID\storage\AuthorizationCodeInterface as OpenIDAuthorizationCodeInterface;
+use nbcx\oauth\server\openID\storage\AuthorizationCodeInterface as OpenIDAuthorizationCodeInterface;
 
 /**
  * Simple MongoDB storage for all storage types
@@ -13,8 +12,6 @@ use nAuth\openID\storage\AuthorizationCodeInterface as OpenIDAuthorizationCodeIn
  *
  * NOTE: Passwords are stored in plaintext, which is never
  * a good idea.  Be sure to override this for your application
- *
- * @author Julien Chaumond <chaumond@gmail.com>
  */
 class Mongo implements AuthorizationCodeInterface,
     AccessTokenInterface,

@@ -1,10 +1,6 @@
 <?php
-namespace nAuth\encryption;
+namespace nbcx\oauth\server\encryption;
 
-/**
- * @link https://github.com/F21/jwt
- * @author F21
- */
 class Jwt implements EncryptionInterface {
 
     public function encode($payload, $key, $algo = 'HS256') {

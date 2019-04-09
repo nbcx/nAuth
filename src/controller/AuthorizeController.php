@@ -1,14 +1,14 @@
 <?php
-namespace nAuth\controller;
+namespace nbcx\oauth\server\controller;
 
-use nAuth\storage\ClientInterface;
-use nAuth\ScopeInterface;
-use nAuth\RequestInterface;
-use nAuth\ResponseInterface;
-use nAuth\Scope;
+use nbcx\oauth\server\storage\ClientInterface;
+use nbcx\oauth\server\ScopeInterface;
+use nbcx\oauth\server\RequestInterface;
+use nbcx\oauth\server\ResponseInterface;
+use nbcx\oauth\server\Scope;
 
 /**
- * @see OAuth2\Controller\AuthorizeControllerInterface
+ * @see \nbcx\oauth\server\controller\AuthorizeControllerInterface
  */
 class AuthorizeController implements AuthorizeControllerInterface {
 

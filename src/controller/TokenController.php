@@ -1,14 +1,14 @@
 <?php
-namespace nAuth\controller;
+namespace nbcx\oauth\server\controller;
 
-use nAuth\responseType\AccessTokenInterface;
-use nAuth\clientAssertionType\ClientAssertionTypeInterface;
-use nAuth\grantType\GrantTypeInterface;
-use nAuth\ScopeInterface;
-use nAuth\Scope;
-use nAuth\storage\ClientInterface;
-use nAuth\RequestInterface;
-use nAuth\ResponseInterface;
+use nbcx\oauth\server\responseType\AccessTokenInterface;
+use nbcx\oauth\server\clientAssertionType\ClientAssertionTypeInterface;
+use nbcx\oauth\server\grantType\GrantTypeInterface;
+use nbcx\oauth\server\ScopeInterface;
+use nbcx\oauth\server\Scope;
+use nbcx\oauth\server\storage\ClientInterface;
+use nbcx\oauth\server\RequestInterface;
+use nbcx\oauth\server\ResponseInterface;
 
 /**
  * @see OAuth2\Controller\TokenControllerInterface

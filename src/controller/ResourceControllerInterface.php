@@ -1,8 +1,8 @@
 <?php
-namespace nAuth\controller;
+namespace nbcx\oauth\server\controller;
 
-use nAuth\RequestInterface;
-use nAuth\ResponseInterface;
+use nbcx\oauth\server\RequestInterface;
+use nbcx\oauth\server\ResponseInterface;
 
 /**
  *  This controller is called when a "resource" is requested.
