@@ -1,7 +1,7 @@
 {
     "name": "nbcx/oauth2-server",
     "description":"OAuth2 Server for PHP",
-    "keywords":["oauth","oauth2","auth"],
+    "keywords":["oauth-server","oauth2","login"],
     "type":"library",
     "license":"MIT",
     "authors":[
