@@ -5,7 +5,7 @@ namespace nbcx\oauth\server;
  * Interface which represents an object response.  Meant to handle and display the proper OAuth2 Responses
  * for errors and successes
  *
- * @see \OAuth2\Response
+ * @see \nbcx\oauth\server\Response
  */
 interface ResponseInterface {
     /**

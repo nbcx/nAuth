@@ -110,13 +110,13 @@ class AuthorizeController implements AuthorizeControllerInterface {
      */
     protected function buildAuthorizeParameters($request, $response, $user_id) {
         // @TODO: we should be explicit with this in the future
-        $params = array(
+        $params = [
             'scope' => $this->scope,
             'state' => $this->state,
             'client_id' => $this->client_id,
             'redirect_uri' => $this->redirect_uri,
             'response_type' => $this->response_type,
-        );
+        ];
 
         return $params;
     }

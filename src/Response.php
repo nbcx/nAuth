@@ -7,10 +7,8 @@ use InvalidArgumentException;
  * Class to handle OAuth2 Responses in a graceful way.  Use this interface
  * to output the proper OAuth2 responses.
  *
- * @see OAuth2\ResponseInterface
+ * @see \nbcx\oauth\server\ResponseInterface
  *
- * This class borrows heavily from the Symfony2 Framework and is part of the symfony package
- * @see Symfony\Component\HttpFoundation\Request (https://github.com/symfony/symfony)
  */
 class Response implements ResponseInterface {
     /**
@@ -31,17 +29,17 @@ class Response implements ResponseInterface {
     /**
      * @var array
      */
-    protected $parameters = array();
+    protected $parameters = [];
 
     /**
      * @var array
      */
-    protected $httpHeaders = array();
+    protected $httpHeaders = [];
 
     /**
      * @var array
      */
-    public static $statusTexts = array(
+    public static $statusTexts = [
         100 => 'Continue',
         101 => 'Switching Protocols',
         200 => 'OK',
@@ -83,14 +81,14 @@ class Response implements ResponseInterface {
         503 => 'Service Unavailable',
         504 => 'Gateway Timeout',
         505 => 'HTTP Version Not Supported',
-    );
+    ];
 
     /**
      * @param array $parameters
      * @param int $statusCode
      * @param array $headers
      */
-    public function __construct($parameters = array(), $statusCode = 200, $headers = array()) {
+    public function __construct($parameters = [], $statusCode = 200, $headers = []) {
         $this->setParameters($parameters);
         $this->setStatusCode($statusCode);
         $this->setHttpHeaders($headers);
@@ -103,13 +101,12 @@ class Response implements ResponseInterface {
      * @return string The response with headers and content
      */
     public function __toString() {
-        $headers = array();
+        $headers = [];
         foreach ($this->httpHeaders as $name => $value) {
             $headers[$name] = (array)$value;
         }
 
-        return
-            sprintf('HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusText) . "\r\n" .
+        return sprintf('HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusText) . "\r\n" .
             $this->getHttpHeadersAsString($headers) . "\r\n" .
             $this->getResponseBody();
     }
@@ -288,10 +285,10 @@ class Response implements ResponseInterface {
      * @throws InvalidArgumentException
      */
     public function setError($statusCode, $error, $errorDescription = null, $errorUri = null) {
-        $parameters = array(
+        $parameters = [
             'error' => $error,
             'error_description' => $errorDescription,
-        );
+        ];
 
         if (!is_null($errorUri)) {
             if (strlen($errorUri) > 0 && $errorUri[0] == '#') {
@@ -301,9 +298,9 @@ class Response implements ResponseInterface {
             $parameters['error_uri'] = $errorUri;
         }
 
-        $httpHeaders = array(
+        $httpHeaders = [
             'Cache-Control' => 'no-store'
-        );
+        ];
 
         $this->setStatusCode($statusCode);
         $this->addParameters($parameters);
@@ -329,7 +326,7 @@ class Response implements ResponseInterface {
             throw new InvalidArgumentException('Cannot redirect to an empty URL.');
         }
 
-        $parameters = array();
+        $parameters = [];
 
         if (!is_null($state)) {
             $parameters['state'] = $state;
@@ -348,7 +345,7 @@ class Response implements ResponseInterface {
             $url .= $sep . http_build_query($this->parameters);
         }
 
-        $this->addHttpHeaders(array('Location' => $url));
+        $this->addHttpHeaders(['Location' => $url]);
 
         if (!$this->isRedirection()) {
             throw new InvalidArgumentException(sprintf('The HTTP status code is not a redirect ("%s" given).', $statusCode));

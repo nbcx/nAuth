@@ -22,7 +22,7 @@ class Pdo implements
     public function __construct($connection, $config = []) {
         if (!$connection instanceof \PDO) {
             if (is_string($connection)) {
-                $connection = array('dsn' => $connection);
+                $connection = ['dsn' => $connection];
             }
             if (!is_array($connection)) {
                 throw new \InvalidArgumentException('First argument to OAuth2\Storage\Pdo must be an instance of PDO, a DSN string, or a configuration array');
