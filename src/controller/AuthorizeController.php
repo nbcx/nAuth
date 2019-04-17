@@ -23,30 +23,16 @@ class AuthorizeController implements AuthorizeControllerInterface {
     protected $config;
     protected $scopeUtil;
 
-    /**
-     * @param OAuth2\Storage\ClientInterface $clientStorage REQUIRED Instance of OAuth2\Storage\ClientInterface to retrieve client information
-     * @param array $responseTypes OPTIONAL Array of OAuth2\ResponseType\ResponseTypeInterface objects.  Valid array
-     *                                                      keys are "code" and "token"
-     * @param array $config OPTIONAL Configuration options for the server
-     *                                                      <code>
-     *                                                      $config = array(
-     *                                                      'allow_implicit' => false,            // if the controller should allow the "implicit" grant type
-     *                                                      'enforce_state'  => true              // if the controller should require the "state" parameter
-     *                                                      'require_exact_redirect_uri' => true, // if the controller should require an exact match on the "redirect_uri" parameter
-     *                                                      'redirect_status_code' => 302,        // HTTP status code to use for redirect responses
-     *                                                      );
-     *                                                      </code>
-     * @param OAuth2\ScopeInterface $scopeUtil OPTIONAL Instance of OAuth2\ScopeInterface to validate the requested scope
-     */
+
     public function __construct(ClientInterface $clientStorage, array $responseTypes = [], array $config = [], ScopeInterface $scopeUtil = null) {
         $this->clientStorage = $clientStorage;
         $this->responseTypes = $responseTypes;
-        $this->config = array_merge(array(
+        $this->config = array_merge([
             'allow_implicit' => false,
             'enforce_state' => true,
             'require_exact_redirect_uri' => true,
             'redirect_status_code' => 302,
-        ), $config);
+        ], $config);
 
         if (is_null($scopeUtil)) {
             $scopeUtil = new Scope();
