@@ -7,8 +7,8 @@ use nbcx\oauth\server\storage\AccessTokenInterface;
 use nbcx\oauth\server\openID\Storage\UserClaimsInterface;
 use nbcx\oauth\server\controller\ResourceController;
 use nbcx\oauth\server\scopeInterface;
-use nbcx\oauth\server\RequestInterface;
-use nbcx\oauth\server\ResponseInterface;
+use nb\request\Driver as RequestInterface;
+use nb\response\Driver as ResponseInterface;
 
 /**
  * @see \nbcx\oauth\server\controller\UserInfoControllerInterface

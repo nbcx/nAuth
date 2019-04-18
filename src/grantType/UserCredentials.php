@@ -3,8 +3,8 @@ namespace nbcx\oauth\server\grantType;
 
 use nbcx\oauth\server\storage\UserCredentialsInterface;
 use nbcx\oauth\server\responseType\AccessTokenInterface;
-use nbcx\oauth\server\RequestInterface;
-use nbcx\oauth\server\ResponseInterface;
+use nb\request\Driver as RequestInterface;
+use nb\response\Driver as ResponseInterface;
 
 class UserCredentials implements GrantTypeInterface {
 

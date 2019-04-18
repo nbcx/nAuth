@@ -29,8 +29,10 @@ use nbcx\oauth\server\grantType\UserCredentials;
 use nbcx\oauth\server\grantType\ClientCredentials;
 use nbcx\oauth\server\grantType\RefreshToken;
 use nbcx\oauth\server\grantType\AuthorizationCode;
-use nbcx\oauth\server\dtorage\JwtAccessToken as JwtAccessTokenStorage;
-use nbcx\oauth\server\dtorage\JwtAccessTokenInterface;
+use nbcx\oauth\server\storage\JwtAccessToken as JwtAccessTokenStorage;
+use nbcx\oauth\server\storage\JwtAccessTokenInterface;
+use nb\request\Driver as RequestInterface;
+use nb\response\Driver as ResponseInterface;
 
 /**
  * Server class for OAuth2
@@ -136,13 +138,6 @@ class Server implements ResourceControllerInterface, AuthorizeControllerInterfac
         }
     }
 
-    public function getAuthorizeController() {
-        if (is_null($this->authorizeController)) {
-            $this->authorizeController = $this->createDefaultAuthorizeController();
-        }
-
-        return $this->authorizeController;
-    }
 
     public function getTokenController() {
         if (is_null($this->tokenController)) {
@@ -299,7 +294,10 @@ class Server implements ResourceControllerInterface, AuthorizeControllerInterfac
      */
     public function handleAuthorizeRequest(RequestInterface $request, ResponseInterface $response, $is_authorized, $user_id = null) {
         $this->response = $response;
-        $this->getAuthorizeController()->handleAuthorizeRequest($request, $this->response, $is_authorized, $user_id);
+        if (is_null($this->authorizeController)) {
+            $this->authorizeController = $this->createDefaultAuthorizeController();
+        }
+        $this->authorizeController->handleAuthorizeRequest($request, $this->response, $is_authorized, $user_id);
 
         return $this->response;
     }

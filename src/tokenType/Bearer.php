@@ -1,8 +1,8 @@
 <?php
 namespace nbcx\oauth\server\tokenType;
 
-use nbcx\oauth\server\RequestInterface;
-use nbcx\oauth\server\ResponseInterface;
+use nb\request\Driver as RequestInterface;
+use nb\response\Driver as ResponseInterface;
 
 /**
  *

@@ -2,11 +2,11 @@
 namespace nbcx\oauth\server;
 
 use nbcx\oauth\server\storage\ScopeInterface as ScopeStorageInterface;
-
+use nb\request\Driver as RequestInterface;
 /**
  * Class to handle scope implementation logic
  *
- * @see OAuth2\Storage\ScopeInterface
+ * @see \nbcx\oauth\server\storage\ScopeInterface
  */
 interface ScopeInterface extends ScopeStorageInterface {
 
@@ -29,7 +29,7 @@ interface ScopeInterface extends ScopeStorageInterface {
     /**
      * Return scope info from request
      *
-     * @param OAuth2\RequestInterface
+     * @param RequestInterface
      * Request object to check
      *
      * @return

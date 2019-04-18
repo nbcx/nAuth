@@ -5,8 +5,8 @@ namespace nbcx\oauth\server\Controller;
 use nbcx\oauth\server\tokenType\TokenTypeInterface;
 use nbcx\oauth\server\storage\AccessTokenInterface;
 use nbcx\oauth\server\ScopeInterface;
-use nbcx\oauth\server\RequestInterface;
-use nbcx\oauth\server\ResponseInterface;
+use nb\request\Driver as RequestInterface;
+use nb\response\Driver as ResponseInterface;
 use nbcx\oauth\server\Scope;
 
 /**

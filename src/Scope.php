@@ -4,6 +4,8 @@ namespace nbcx\oauth\server;
 use nbcx\oauth\server\storage\Memory;
 use nbcx\oauth\server\storage\ScopeInterface as ScopeStorageInterface;
 
+use nb\request\Driver as RequestInterface;
+
 class Scope implements ScopeInterface {
 
     protected $storage;
@@ -72,7 +74,7 @@ class Scope implements ScopeInterface {
 
     public function getScopeFromRequest(RequestInterface $request) {
         // "scope" is valid if passed in either POST or QUERY
-        return $request->request('scope', $request->query('scope'));
+        return $request->input('scope');
     }
 
     public function getDefaultScope($client_id = null) {

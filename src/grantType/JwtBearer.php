@@ -6,8 +6,8 @@ use nbcx\oauth\server\storage\JwtBearerInterface;
 use nbcx\oauth\server\encryption\Jwt;
 use nbcx\oauth\server\encryption\EncryptionInterface;
 use nbcx\oauth\server\responseType\AccessTokenInterface;
-use nbcx\oauth\server\RequestInterface;
-use nbcx\oauth\server\ResponseInterface;
+use nb\request\Driver as RequestInterface;
+use nb\response\Driver as ResponseInterface;
 
 class JwtBearer implements GrantTypeInterface, ClientAssertionTypeInterface {
 

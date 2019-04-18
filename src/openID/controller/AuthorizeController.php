@@ -2,11 +2,11 @@
 namespace nbcx\oauth\server\openID\Controller;
 
 use nbcx\oauth\server\controller\AuthorizeController as BaseAuthorizeController;
-use nbcx\oauth\server\RequestInterface;
-use nbcx\oauth\server\ResponseInterface;
+use nb\request\Driver as RequestInterface;
+use nb\response\Driver as ResponseInterface;
 
 /**
- * @see OAuth2\Controller\AuthorizeControllerInterface
+ * @see \nbcx\oauth\server\controller\AuthorizeControllerInterface
  */
 class AuthorizeController extends BaseAuthorizeController implements AuthorizeControllerInterface {
     private $nonce;

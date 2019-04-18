@@ -2,8 +2,8 @@
 namespace nbcx\oauth\server\clientAssertionType;
 
 use nbcx\oauth\server\storage\ClientCredentialsInterface;
-use nbcx\oauth\server\RequestInterface;
-use nbcx\oauth\server\ResponseInterface;
+use nb\request\Driver as RequestInterface;
+use nb\response\Driver as ResponseInterface;
 
 /**
  * Validate a client via Http Basic authentication

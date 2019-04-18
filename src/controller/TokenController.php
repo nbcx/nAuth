@@ -7,8 +7,8 @@ use nbcx\oauth\server\grantType\GrantTypeInterface;
 use nbcx\oauth\server\ScopeInterface;
 use nbcx\oauth\server\Scope;
 use nbcx\oauth\server\storage\ClientInterface;
-use nbcx\oauth\server\RequestInterface;
-use nbcx\oauth\server\ResponseInterface;
+use nb\request\Driver as RequestInterface;
+use nb\response\Driver as ResponseInterface;
 
 /**
  * @see OAuth2\Controller\TokenControllerInterface

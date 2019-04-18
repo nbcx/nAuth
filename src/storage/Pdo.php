@@ -56,8 +56,50 @@ class Pdo implements
         ], $config);
     }
 
+    /**
+     * @param $sql
+     * @param null $params
+     * @param bool $isselect 是否是查询语句
+     * @return int|\PDOStatement
+     * @throws \Exception
+     */
+    public function execute($table, $sql, $params = NULL,$isselect=false) {
+        $sql = sprintf($sql,$table);
+
+        if($params !== null && !is_array($params)) {
+            $params = [$params];
+        }
+        \nb\Debug::record(3, $sql, $params);
+
+        $db = $this->db->prepare($sql);
+
+        $result = is_null($params) ? $db->execute() : $db->execute($params);
+        if (false !== $result) {
+            return $isselect?$db:$db->rowCount();
+        }
+        $error = $db->errorInfo();
+        if(isset($error[2])) {
+            $error = "[{$error[0]}][{$error[1]}]{$error[2]}";
+        }
+        else {
+            $error = $sql.': '.json_encode($params);
+        }
+
+        throw new \Exception($error);
+    }
+
+    public function select($table, $sql, $params = NULL,$isStmt = false) {
+        $stmt = $this->execute($table, $sql, $params,true);
+        return $isStmt?$stmt:$stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
     /* OAuth2\Storage\ClientCredentialsInterface */
     public function checkClientCredentials($client_id, $client_secret = null) {
+
+        $result = $this->select($this->config['client_table'],'SELECT * from %s where client_id = ?',$client_id);
+        return $result && $result['client_secret'] == $client_secret;
+
+        #TODO delete
         $stmt = $this->db->prepare(sprintf('SELECT * from %s where client_id = :client_id', $this->config['client_table']));
         $stmt->execute(compact('client_id'));
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -67,6 +109,13 @@ class Pdo implements
     }
 
     public function isPublicClient($client_id) {
+        $result = $this->select($this->config['client_table'], 'SELECT * from %s where client_id = ?',$client_id);
+        if (!$result) {
+            return false;
+        }
+        return empty($result['client_secret']);
+
+        #TODO delete
         $stmt = $this->db->prepare(sprintf('SELECT * from %s where client_id = :client_id', $this->config['client_table']));
         $stmt->execute(compact('client_id'));
 
@@ -79,6 +128,11 @@ class Pdo implements
 
     /* OAuth2\Storage\ClientInterface */
     public function getClientDetails($client_id) {
+
+        $result = $this->select($this->config['client_table'],'SELECT * from %s where client_id = ?',$client_id);
+        return $result;
+
+        #TODO delete
         $stmt = $this->db->prepare(sprintf('SELECT * from %s where client_id = :client_id', $this->config['client_table']));
         $stmt->execute(compact('client_id'));
 
@@ -86,6 +140,26 @@ class Pdo implements
     }
 
     public function setClientDetails($client_id, $client_secret = null, $redirect_uri = null, $grant_types = null, $scope = null, $user_id = null) {
+        $data = [
+            $client_id,
+            $client_secret,
+            $redirect_uri,
+            $grant_types,
+            $scope,
+            $user_id
+        ];
+
+        // if it exists, update it.
+        if ($this->getClientDetails($client_id)) {
+            $result = $this->execute($this->config['client_table'],'UPDATE %s SET client_secret=?, redirect_uri=?, grant_types=?, scope=?, user_id=? where client_id=?',$data);
+        }
+        else {
+            $result = $this->execute($this->config['client_table'],'INSERT INTO %s (client_id, client_secret, redirect_uri, grant_types, scope, user_id) VALUES (?, ?, ?, ?, ?, ?)', $data);
+        }
+
+        return $result;
+
+        #TODO delete
         // if it exists, update it.
         if ($this->getClientDetails($client_id)) {
             $stmt = $this->db->prepare($sql = sprintf('UPDATE %s SET client_secret=:client_secret, redirect_uri=:redirect_uri, grant_types=:grant_types, scope=:scope, user_id=:user_id where client_id=:client_id', $this->config['client_table']));
@@ -111,6 +185,15 @@ class Pdo implements
 
     /* OAuth2\Storage\AccessTokenInterface */
     public function getAccessToken($access_token) {
+        $token = $this->select($this->config['access_token_table'], 'SELECT * from ? where access_token = ?',$access_token);
+        if ($token) {
+            // convert date string back to timestamp
+            $token['expires'] = strtotime($token['expires']);
+        }
+
+        return $token;
+
+        #TODO delete
         $stmt = $this->db->prepare(sprintf('SELECT * from %s where access_token = :access_token', $this->config['access_token_table']));
 
         $token = $stmt->execute(compact('access_token'));
@@ -123,6 +206,24 @@ class Pdo implements
     }
 
     public function setAccessToken($access_token, $client_id, $user_id, $expires, $scope = null) {
+        // convert expires to datestring
+        $expires = date('Y-m-d H:i:s', $expires);
+        $data = [
+            $client_id,
+            $expires,
+            $user_id,
+            $scope,
+            $access_token
+        ];
+        if ($this->getAccessToken($access_token)) {
+            $result = $this->execute($this->config['access_token_table'], 'UPDATE %s SET client_id=?, expires=?, user_id=?, scope=? where access_token=?', $data);
+        }
+        else {
+            $result = $this->execute($this->config['access_token_table'], 'INSERT INTO %s (client_id, expires, user_id, scope, access_token) VALUES (?, ?, ?, ?, ?)',$data);
+        }
+        return $result;
+
+        #TODO delete
         // convert expires to datestring
         $expires = date('Y-m-d H:i:s', $expires);
 
@@ -138,6 +239,13 @@ class Pdo implements
     }
 
     public function unsetAccessToken($access_token) {
+        return $this->execute(
+            $this->config['access_token_table'],
+            'DELETE FROM %s WHERE access_token = ?',
+            $access_token
+        );
+
+        #TODO delete
         $stmt = $this->db->prepare(sprintf('DELETE FROM %s WHERE access_token = :access_token', $this->config['access_token_table']));
 
         return $stmt->execute(compact('access_token'));
@@ -145,6 +253,10 @@ class Pdo implements
 
     /* OAuth2\Storage\AuthorizationCodeInterface */
     public function getAuthorizationCode($code) {
+
+        return $this->select($this->config['code_table'],'SELECT * from ? where authorization_code = ?',$code);
+
+        #TODO delete
         $stmt = $this->db->prepare(sprintf('SELECT * from %s where authorization_code = :code', $this->config['code_table']));
         $stmt->execute(compact('code'));
 
@@ -157,6 +269,34 @@ class Pdo implements
     }
 
     public function setAuthorizationCode($code, $client_id, $user_id, $redirect_uri, $expires, $scope = null, $id_token = null) {
+        if (func_num_args() > 6) {
+            // we are calling with an id token
+            return call_user_func_array([$this, 'setAuthorizationCodeWithIdToken'], func_get_args());
+        }
+
+        // convert expires to datestring
+        $expires = date('Y-m-d H:i:s', $expires);
+
+        $data = [
+            $client_id,
+            $user_id,
+            $redirect_uri,
+            $expires,
+            $scope
+        ];
+        // if it exists, update it.
+        if ($this->getAuthorizationCode($code)) {
+            $result = $this->execute($this->config['code_table'],'UPDATE %s SET client_id=?, user_id=?, redirect_uri=?, expires=?, scope=? where authorization_code=?',$data);
+        }
+        else {
+            $result = $this->execute($this->config['code_table'],'INSERT INTO %s (client_id, user_id, redirect_uri, expires, scope, authorization_code) VALUES (?, ?, ?, ?, ?, ?)',$data);
+        }
+
+        return $result;
+
+
+
+        #TODO delete
         if (func_num_args() > 6) {
             // we are calling with an id token
             return call_user_func_array([$this, 'setAuthorizationCodeWithIdToken'], func_get_args());
@@ -179,6 +319,29 @@ class Pdo implements
     private function setAuthorizationCodeWithIdToken($code, $client_id, $user_id, $redirect_uri, $expires, $scope = null, $id_token = null) {
         // convert expires to datestring
         $expires = date('Y-m-d H:i:s', $expires);
+        $data = [
+            $client_id,
+            $user_id,
+            $redirect_uri,
+            $expires,
+            $scope,
+            $id_token
+        ];
+        // if it exists, update it.
+        if ($this->getAuthorizationCode($code)) {
+            $result = $this->execute($this->config['code_table'],'UPDATE %s SET client_id=?, user_id=?, redirect_uri=?, expires=?, scope=?, id_token =? where authorization_code=?',$data);
+        }
+        else {
+            $result = $this->execute($this->config['code_table'],'INSERT INTO %s (client_id, user_id, redirect_uri, expires, scope, id_token, authorization_code) VALUES (?, ?, ?, ?, ?, ?, ?)',$data);
+        }
+
+        return $result;
+
+
+        #TODO delete
+
+        // convert expires to datestring
+        $expires = date('Y-m-d H:i:s', $expires);
 
         // if it exists, update it.
         if ($this->getAuthorizationCode($code)) {
@@ -192,6 +355,12 @@ class Pdo implements
     }
 
     public function expireAuthorizationCode($code) {
+
+        return $this->execute($this->config['code_table'],'DELETE FROM %s WHERE authorization_code = ?',[
+            $code
+        ]);
+
+        #TODO delete
         $stmt = $this->db->prepare(sprintf('DELETE FROM %s WHERE authorization_code = :code', $this->config['code_table']));
 
         return $stmt->execute(compact('code'));
@@ -250,6 +419,15 @@ class Pdo implements
 
     /* OAuth2\Storage\RefreshTokenInterface */
     public function getRefreshToken($refresh_token) {
+        $token = $this->select( $this->config['refresh_token_table'],'SELECT * FROM %s WHERE refresh_token = ?',[
+            $refresh_token
+        ]);
+        // convert expires to epoch time
+        $token and $token['expires'] = strtotime($token['expires']);
+
+        return $token;
+
+        #TODO delete
         $stmt = $this->db->prepare(sprintf('SELECT * FROM %s WHERE refresh_token = :refresh_token', $this->config['refresh_token_table']));
 
         $token = $stmt->execute(compact('refresh_token'));
@@ -264,6 +442,18 @@ class Pdo implements
     public function setRefreshToken($refresh_token, $client_id, $user_id, $expires, $scope = null) {
         // convert expires to datestring
         $expires = date('Y-m-d H:i:s', $expires);
+        $result = $this->select($this->config['refresh_token_table'],'INSERT INTO %s (refresh_token, client_id, user_id, expires, scope) VALUES (?, ?, ?, ?, ?)',[
+            $refresh_token,
+            $client_id,
+            $user_id,
+            $expires,
+            $scope
+        ]);
+        return $result;
+
+        #TODO delete
+        // convert expires to datestring
+        $expires = date('Y-m-d H:i:s', $expires);
 
         $stmt = $this->db->prepare(sprintf('INSERT INTO %s (refresh_token, client_id, user_id, expires, scope) VALUES (:refresh_token, :client_id, :user_id, :expires, :scope)', $this->config['refresh_token_table']));
 
@@ -271,6 +461,11 @@ class Pdo implements
     }
 
     public function unsetRefreshToken($refresh_token) {
+        return $this->execute($this->config['refresh_token_table'],'DELETE FROM %s WHERE refresh_token = ?',[
+            $refresh_token
+        ]);
+
+        #TODO delete
         $stmt = $this->db->prepare(sprintf('DELETE FROM %s WHERE refresh_token = :refresh_token', $this->config['refresh_token_table']));
 
         return $stmt->execute(compact('refresh_token'));
@@ -282,6 +477,20 @@ class Pdo implements
     }
 
     public function getUser($username) {
+
+        $userInfo = $this->select($this->config['user_table'], 'SELECT * from %s where username=?',[
+            $username
+        ]);
+        if (!$userInfo) {
+            return false;
+        }
+
+        // the default behavior is to use "username" as the user_id
+        return array_merge([
+            'user_id' => $username
+        ], $userInfo);
+
+        #TODO delete
         $stmt = $this->db->prepare($sql = sprintf('SELECT * from %s where username=:username', $this->config['user_table']));
         $stmt->execute(['username' => $username]);
 
@@ -296,6 +505,22 @@ class Pdo implements
     }
 
     public function setUser($username, $password, $firstName = null, $lastName = null) {
+        // do not store in plaintext
+        $password = sha1($password);
+        $data = [
+            $password,
+            $firstName,
+            $lastName
+        ];
+        if ($this->getUser($username)) {
+            $result = $this->execute( $this->config['user_table'],'UPDATE %s SET password=?, first_name=?, last_name=? where username=?',$data);
+        }
+        else {
+            $result = $this->execute( $this->config['user_table'],'INSERT INTO %s (password, first_name, last_name, username) VALUES (?, ?, ?, ?)',$data);
+        }
+        return $result;
+
+        #TODO delete
         // do not store in plaintext
         $password = sha1($password);
 
@@ -314,6 +539,17 @@ class Pdo implements
     public function scopeExists($scope) {
         $scope = explode(' ', $scope);
         $whereIn = implode(',', array_fill(0, count($scope), '?'));
+        $result = $this->select( $this->config['scope_table'],'SELECT count(scope) as count FROM %s WHERE scope IN ('.$whereIn.')', $scope);
+
+        if ($result) {
+            return $result['count'] == count($scope);
+        }
+
+        return false;
+
+        #TODO delete
+        $scope = explode(' ', $scope);
+        $whereIn = implode(',', array_fill(0, count($scope), '?'));
         $stmt = $this->db->prepare(sprintf('SELECT count(scope) as count FROM %s WHERE scope IN (%s)', $this->config['scope_table'], $whereIn));
         $stmt->execute($scope);
 
@@ -325,8 +561,22 @@ class Pdo implements
     }
 
     public function getDefaultScope($client_id = null) {
+        $result = $this->select($this->config['scope_table'],'SELECT scope FROM %s WHERE is_default=?',[
+            true
+        ]);
+        if ($result) {
+            $defaultScope = array_map(function ($row) {
+                return $row['scope'];
+            }, $result);
+
+            return implode(' ', $defaultScope);
+        }
+
+        return null;
+
+        #TODO delete
         $stmt = $this->db->prepare(sprintf('SELECT scope FROM %s WHERE is_default=:is_default', $this->config['scope_table']));
-        $stmt->execute(array('is_default' => true));
+        $stmt->execute(['is_default' => true]);
 
         if ($result = $stmt->fetchAll(\PDO::FETCH_ASSOC)) {
             $defaultScope = array_map(function ($row) {
@@ -341,6 +591,13 @@ class Pdo implements
 
     /* JWTBearerInterface */
     public function getClientKey($client_id, $subject) {
+        $stmt = $this->select( $this->config['jwt_table'],'SELECT public_key from %s where client_id=? AND subject=?',[
+            $client_id,
+            $subject
+        ],true);
+        return $stmt->fetchColumn();
+
+        #TODO delete
         $stmt = $this->db->prepare($sql = sprintf('SELECT public_key from %s where client_id=:client_id AND subject=:subject', $this->config['jwt_table']));
 
         $stmt->execute(['client_id' => $client_id, 'subject' => $subject]);
@@ -361,6 +618,23 @@ class Pdo implements
     }
 
     public function getJti($client_id, $subject, $audience, $expires, $jti) {
+        $result = $this->execute( $this->config['jti_table'],'SELECT * FROM %s WHERE issuer=? AND subject=? AND audience=? AND expires=? AND jti=?', [
+            $client_id,
+            $subject,
+            $audience,
+            $expires,
+            $jti
+        ]);
+
+        return $result?[
+            'issuer' => $result['issuer'],
+            'subject' => $result['subject'],
+            'audience' => $result['audience'],
+            'expires' => $result['expires'],
+            'jti' => $result['jti'],
+        ]:null;
+
+        #TODO delete
         $stmt = $this->db->prepare($sql = sprintf('SELECT * FROM %s WHERE issuer=:client_id AND subject=:subject AND audience=:audience AND expires=:expires AND jti=:jti', $this->config['jti_table']));
 
         $stmt->execute(compact('client_id', 'subject', 'audience', 'expires', 'jti'));
@@ -379,6 +653,14 @@ class Pdo implements
     }
 
     public function setJti($client_id, $subject, $audience, $expires, $jti) {
+        return $this->execute( $this->config['jti_table'],'INSERT INTO %s (issuer, subject, audience, expires, jti) VALUES (?, ?, ?, ?, ?)',[
+            $client_id,
+            $audience,
+            $expires,
+            $jti
+        ]);
+
+        #TODO delete
         $stmt = $this->db->prepare(sprintf('INSERT INTO %s (issuer, subject, audience, expires, jti) VALUES (:client_id, :subject, :audience, :expires, :jti)', $this->config['jti_table']));
 
         return $stmt->execute(compact('client_id', 'subject', 'audience', 'expires', 'jti'));
@@ -386,6 +668,12 @@ class Pdo implements
 
     /* PublicKeyInterface */
     public function getPublicKey($client_id = null) {
+        $result = $this->select($this->config['public_key_table'],'SELECT public_key FROM %s WHERE client_id=? OR client_id IS NULL ORDER BY client_id IS NOT NULL DESC',[
+            $client_id
+        ]);
+        return $result?$result['public_key']:null;
+
+        #TODO delete
         $stmt = $this->db->prepare($sql = sprintf('SELECT public_key FROM %s WHERE client_id=:client_id OR client_id IS NULL ORDER BY client_id IS NOT NULL DESC', $this->config['public_key_table']));
 
         $stmt->execute(compact('client_id'));
@@ -395,6 +683,13 @@ class Pdo implements
     }
 
     public function getPrivateKey($client_id = null) {
+        $result = $this->select($this->config['public_key_table'],'SELECT private_key FROM %s WHERE client_id=? OR client_id IS NULL ORDER BY client_id IS NOT NULL DESC',[
+            $client_id
+        ]);
+        return $result?$result['private_key']:null;
+
+        #TODO delete
+
         $stmt = $this->db->prepare($sql = sprintf('SELECT private_key FROM %s WHERE client_id=:client_id OR client_id IS NULL ORDER BY client_id IS NOT NULL DESC', $this->config['public_key_table']));
 
         $stmt->execute(compact('client_id'));
@@ -404,6 +699,13 @@ class Pdo implements
     }
 
     public function getEncryptionAlgorithm($client_id = null) {
+        $result = $this->select($this->config['public_key_table'],'SELECT encryption_algorithm FROM %s WHERE client_id=? OR client_id IS NULL ORDER BY client_id IS NOT NULL DESC',[
+            $client_id
+        ]);
+
+        return $result?$result['encryption_algorithm']:'RS256';
+
+        #TODO delete
         $stmt = $this->db->prepare($sql = sprintf('SELECT encryption_algorithm FROM %s WHERE client_id=:client_id OR client_id IS NULL ORDER BY client_id IS NOT NULL DESC', $this->config['public_key_table']));
 
         $stmt->execute(compact('client_id'));
