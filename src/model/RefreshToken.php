@@ -19,8 +19,8 @@ namespace nbcx\oauth\server\model;
  */
 class RefreshToken {
 
-    public function index() {
-
+    protected static function __config() {
+        return ['refresh_tokens', 'refresh_token'];
     }
 
 }

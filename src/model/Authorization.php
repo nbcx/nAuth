@@ -20,8 +20,8 @@ use nb\Model;
  */
 class Authorization extends Model {
 
-    public function index() {
-
+    protected static function __config() {
+        return ['authorization_codes', 'authorization_code'];
     }
 
 }

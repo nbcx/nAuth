@@ -17,10 +17,10 @@ namespace nbcx\oauth\server\model;
  * @author: collin <collin@nb.cx>
  * @date: 2019/4/19
  */
-class Token {
+class Token extends Mod{
 
-    public function index() {
-
+    protected static function __config() {
+        return ['refresh_tokens', 'refresh_token'];
     }
 
 }
