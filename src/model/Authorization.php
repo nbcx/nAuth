@@ -24,4 +24,21 @@ class Authorization extends Model {
         return ['authorization_codes', 'authorization_code'];
     }
 
+
+    /* OAuth2\Storage\AuthorizationCodeInterface */
+    public function getAuthorizationCode($code) {
+
+        $code = self::findId($code);
+
+        if ($code->have) {
+            // convert date string back to timestamp
+            $code['expires'] = strtotime($code['expires']);
+            return $code;
+        }
+
+        return null;
+    }
+
+
+
 }

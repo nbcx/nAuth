@@ -21,6 +21,7 @@ class Service extends \nb\Service {
     protected function error($code, $msg) {
         $this->code = $code;
         $this->msg = $msg;
+        return false;
     }
 
 }

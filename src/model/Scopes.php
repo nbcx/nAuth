@@ -33,16 +33,6 @@ class Scopes extends Model {
 
 
         return true;
-
-        #TODO
-        $stmt = $db->prepare(sprintf('SELECT count(scope) as count FROM %s WHERE scope IN (%s)', $this->config['scope_table'], $whereIn));
-        $stmt->execute($scope);
-
-        if ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            return $result['count'] == count($scope);
-        }
-
-        return false;
     }
 
 
