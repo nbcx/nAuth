@@ -9,6 +9,8 @@
  */
 namespace nbcx\oauth\server\model;
 
+use nb\Model;
+
 /**
  * RefreshToken
  *
@@ -17,7 +19,7 @@ namespace nbcx\oauth\server\model;
  * @author: collin <collin@nb.cx>
  * @date: 2019/4/19
  */
-class RefreshToken {
+class RefreshToken extends Model {
 
     protected static function __config() {
         return ['refresh_tokens', 'refresh_token'];

@@ -70,8 +70,10 @@ class Authorization extends Service {
         if (empty($redirect_uri) && !empty($registered_redirect_uri)) {
             $redirect_uri = $registered_redirect_uri;
         }
-
-        $this->data = $uri_params['query'];
+        $this->data = [
+            'authorization_code'=> $uri_params['query']['code'],
+            'state'=> $uri_params['query']['state'],
+        ];
         return true;
     }
 
