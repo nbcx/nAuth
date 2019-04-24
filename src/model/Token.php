@@ -21,7 +21,7 @@ use nb\Model;
 class Token extends Model {
 
     protected static function __config() {
-        return ['refresh_tokens', 'refresh_token'];
+        return ['access_tokens', 'access_token'];
     }
 
     public function setAccessToken($access_token, $client_id, $user_id, $expires, $scope = null) {

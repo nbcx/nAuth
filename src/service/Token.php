@@ -85,12 +85,28 @@ class Token extends Service {
                 'refresh_token'=>$token["refresh_token"],
                 'client_id'=>$client_id,
                 'user_id'=>$user_id,
-                'expires'=>$expires,
+                'expires'=>date('Y-m-d H:i:s',$expires),
                 'scope'=>$scope
             ]);
         }
 
         return $token;
+    }
+
+    /**
+     * Generates an unique refresh token
+     *
+     * Implementing classes may want to override this function to implement
+     * other refresh token generation schemes.
+     *
+     * @return
+     * An unique refresh.
+     *
+     * @ingroup oauth2_section_4
+     * @see OAuth2::generateAccessToken()
+     */
+    protected function generateRefreshToken() {
+        return $this->generateAccessToken(); // let's reuse the same scheme for token generation
     }
 
     protected function generateAccessToken() {
