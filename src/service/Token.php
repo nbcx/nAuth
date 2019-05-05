@@ -40,16 +40,14 @@ class Token extends Service {
             return false;
         }
 
-
-
         $token = $this->createAccessToken($client_id,$user_id);
-
-        ed($token);
-
+        $this->data = $token;
+        return true;
     }
 
     protected function validateCode() {
         return true;
+        $this->error(400,'code错误');
     }
 
     public function createAccessToken($client_id, $user_id, $scope = null, $includeRefreshToken = true) {
@@ -59,7 +57,7 @@ class Token extends Service {
             "token_type" => $this->config['token_type'],
             "scope" => $scope
         ];
-        $expires = date('Y-m-d H:i:s', $this->config['access_lifetime'] ? time() + $this->config['access_lifetime'] : null);
+        $expires = $this->config['access_lifetime'] ? time() + $this->config['access_lifetime'] : 0;//date('Y-m-d H:i:s', $this->config['access_lifetime'] ? time() + $this->config['access_lifetime'] : null);
         \nbcx\oauth\server\model\Token::insert([
             'client_id'=>$client_id,
             'access_token'=>$token["access_token"],
@@ -85,7 +83,7 @@ class Token extends Service {
                 'refresh_token'=>$token["refresh_token"],
                 'client_id'=>$client_id,
                 'user_id'=>$user_id,
-                'expires'=>date('Y-m-d H:i:s',$expires),
+                'expires'=>$expires,//date('Y-m-d H:i:s',$expires),
                 'scope'=>$scope
             ]);
         }
