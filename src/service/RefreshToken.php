@@ -9,8 +9,6 @@
  */
 namespace nbcx\oauth\server\service;
 
-use nbcx\oauth\server\util\Service;
-
 /**
  * RefreshToken
  *
