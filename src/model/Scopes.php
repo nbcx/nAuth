@@ -22,9 +22,6 @@ use nb\Model;
  */
 class Scopes extends Model {
 
-    public function index() {
-
-    }
 
     /* ScopeInterface */
     public static function exists($scope) {

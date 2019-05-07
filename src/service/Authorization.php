@@ -53,16 +53,16 @@ class Authorization extends Service {
         ed($uri);
     }
 
-    public function api() {
+    protected function create($user_id = 0) {
         if (!$data = $this->validateRequest()) {
             return false;
         }
 
-        if(empty($data['redirect_uri'])) {
-            $this->msg = 'redirect_uri can`t empty';
-            return false;
-        }
-        $user_id = 0;
+        //if(empty($data['redirect_uri'])) {
+        //    $this->msg = 'redirect_uri can`t empty';
+        //    return false;
+        //}
+
         $authResult = $this->getAuthorizeResponse($data,$user_id);
 
         list($redirect_uri, $uri_params) = $authResult;
@@ -109,8 +109,7 @@ class Authorization extends Service {
             . ((isset($parse_url["port"])) ? ":" . $parse_url["port"] : "")
             . ((isset($parse_url["path"])) ? $parse_url["path"] : "")
             . ((isset($parse_url["query"]) && !empty($parse_url['query'])) ? "?" . $parse_url["query"] : "")
-            . ((isset($parse_url["fragment"])) ? "#" . $parse_url["fragment"] : "")
-            ;
+            . ((isset($parse_url["fragment"])) ? "#" . $parse_url["fragment"] : "");
     }
 
     public function getAuthorizeResponse($params, $user_id = null) {
@@ -271,7 +270,6 @@ class Authorization extends Service {
             self::RESPONSE_TYPE_AUTHORIZATION_CODE,
         ];
     }
-
 
 
 }

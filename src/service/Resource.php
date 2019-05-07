@@ -7,7 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace service;
+namespace nbcx\oauth\server\service;
 
 use nbcx\oauth\server\model\Token;
 use nbcx\oauth\server\util\Service;
@@ -28,12 +28,19 @@ class Resource extends Service {
         'token_bearer_header_name' => 'Bearer',
     ];
 
+    protected $token;
 
-    public function verifyResourceRequest(RequestInterface $request, ResponseInterface $response, $scope = null) {
-        $token = $this->getAccessTokenData($request, $response);
+    public function __construct($controller) {
+        parent::__construct($controller);
+
+        $this->token = $this->getAccessTokenData();
+    }
+
+    protected function verify($scope = null) {
+        $token = $this->token;
 
         // Check if we have token data
-        if (is_null($token)) {
+        if (is_null($this->token)) {
             return false;
         }
 
@@ -42,18 +49,8 @@ class Resource extends Service {
          * If token doesn't have a scope, it's null/empty, or it's insufficient, then throw 403
          * @see http://tools.ietf.org/html/rfc6750#section-3.1
          */
-        if ($scope && (!isset($token["scope"]) || !$token["scope"] || !$this->scopeUtil->checkScope($scope, $token["scope"]))) {
-            $response->setError(403, 'insufficient_scope', 'The request requires higher privileges than provided by the access token');
-            $response->addHttpHeaders([
-                'WWW-Authenticate' => sprintf('%s realm="%s", scope="%s", error="%s", error_description="%s"',
-                    $this->tokenType->getTokenType(),
-                    $this->config['www_realm'],
-                    $scope,
-                    $response->getParameter('error'),
-                    $response->getParameter('error_description')
-                )
-            ]);
-
+        if ($scope && (!isset($token["scope"]) || !$token["scope"] || !$this->checkScope($scope, $token["scope"]))) {
+            $this->error(403, 'The request requires higher privileges than provided by the access token');
             return false;
         }
 
@@ -64,10 +61,31 @@ class Resource extends Service {
     }
 
 
-    public function getAccessTokenData(RequestInterface $request, ResponseInterface $response) {
-        // Get the token parameter
+    /**
+     * Check if everything in required scope is contained in available scope.
+     *
+     * @param $required_scope
+     * A space-separated string of scopes.
+     *
+     * @return
+     * TRUE if everything in required scope is contained in available scope,
+     * and FALSE if it isn't.
+     *
+     * @see http://tools.ietf.org/html/rfc6749#section-7
+     *
+     * @ingroup oauth2_section_7
+     */
+    private function checkScope($required_scope, $available_scope) {
+        $required_scope = explode(' ', trim($required_scope));
+        $available_scope = explode(' ', trim($available_scope));
 
-        if ($token_param = $this->getAccessTokenParameter($request, $response)) {
+        return (count(array_diff($required_scope, $available_scope)) == 0);
+    }
+
+
+    private function getAccessTokenData() {
+        // Get the token parameter
+        if ($token_param = $this->input($this->config['token_param_name'])) {
             // Get the stored token data (from the implementing subclass)
             // Check we have a well formed token
             // Check token expiration (expires is a mandatory paramter)
@@ -84,85 +102,10 @@ class Resource extends Service {
                 return $token;
             }
         }
-
-        $authHeader = sprintf('%s realm="%s"', $this->tokenType->getTokenType(), $this->config['www_realm']);
-
-        if ($error = $response->getParameter('error')) {
-            $authHeader = sprintf('%s, error="%s"', $authHeader, $error);
-            if ($error_description = $response->getParameter('error_description')) {
-                $authHeader = sprintf('%s, error_description="%s"', $authHeader, $error_description);
-            }
-        }
-
-        $response->addHttpHeaders(['WWW-Authenticate' => $authHeader]);
-
+        $this->error(401, 'The parameter access token missing');
         return null;
     }
 
-    public function getAccessTokenParameter(RequestInterface $request, ResponseInterface $response) {
-        $headers = $request->headers('AUTHORIZATION');
 
-        /**
-         * Ensure more than one method is not used for including an
-         * access token
-         *
-         * @see http://tools.ietf.org/html/rfc6750#section-3.1
-         */
-        $methodsUsed = !empty($headers) + (bool) ($request->query($this->config['token_param_name'])) + (bool) ($request->request($this->config['token_param_name']));
-        if ($methodsUsed > 1) {
-            $this->error(400, 'Only one method may be used to authenticate at a time (Auth header, GET or POST)');
-            return null;
-        }
-
-        /**
-         * If no authentication is provided, set the status code
-         * to 401 and return no other error information
-         *
-         * @see http://tools.ietf.org/html/rfc6750#section-3.1
-         */
-        if ($methodsUsed == 0) {
-            $response->setStatusCode(401);
-
-            return null;
-        }
-
-        // HEADER: Get the access token from the header
-        if (!empty($headers)) {
-            if (!preg_match('/' . $this->config['token_bearer_header_name'] . '\s(\S+)/i', $headers, $matches)) {
-                $response->setError(400, 'invalid_request', 'Malformed auth header');
-
-                return null;
-            }
-
-            return $matches[1];
-        }
-
-        if ($request->request($this->config['token_param_name'])) {
-            // // POST: Get the token from POST data
-            if (!in_array(strtolower($request->server('REQUEST_METHOD')), array('post', 'put'))) {
-                $response->setError(400, 'invalid_request', 'When putting the token in the body, the method must be POST or PUT', '#section-2.2');
-
-                return null;
-            }
-
-            $contentType = $request->server('CONTENT_TYPE');
-            if (false !== $pos = strpos($contentType, ';')) {
-                $contentType = substr($contentType, 0, $pos);
-            }
-
-            if ($contentType !== null && $contentType != 'application/x-www-form-urlencoded') {
-                // IETF specifies content-type. NB: Not all webservers populate this _SERVER variable
-                // @see http://tools.ietf.org/html/rfc6750#section-2.2
-                $response->error(400, 'invalid_request', 'The content type for POST requests must be "application/x-www-form-urlencoded"');
-
-                return null;
-            }
-
-            return $request->request($this->config['token_param_name']);
-        }
-
-        // GET method
-        return $request->query($this->config['token_param_name']);
-    }
 
 }
